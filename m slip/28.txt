@@ -1,0 +1,116 @@
+public class Slip19 {
+    public static void main(String[] args) {
+        if (args.length == 0) {
+            System.out.println("Please provide a list of integers as command line arguments.");
+            return;
+        }
+        int count = 0;
+        for (String arg : args) {
+            try {
+                Integer.parseInt(arg);
+                count++;
+            } catch (NumberFormatException e) {
+            }
+        }
+        System.out.println("Number of integers in the list: " + count);
+    }
+}
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class Slip19 extends JFrame {
+    private DefaultTableModel tableModel;
+    private JTable employeeTable;
+    private JTextField enoField, enameField, salaryField;
+    public Slip19() {
+        setTitle("Employee Details");
+        setSize(500, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        initComponents();
+    }
+    private void initComponents() {
+        tableModel = new DefaultTableModel();
+        tableModel.addColumn("Employee Number");
+        tableModel.addColumn("Employee Name");
+        tableModel.addColumn("Salary");
+        employeeTable = new JTable(tableModel);
+        enoField = new JTextField(10);
+        enameField = new JTextField(10);
+        salaryField = new JTextField(10);
+        JButton addButton = new JButton("Add Employee");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addEmployee();
+            }
+        });
+        setLayout(new BorderLayout());
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(new JLabel("Employee Number:"));
+        inputPanel.add(enoField);
+        inputPanel.add(new JLabel("Employee Name:"));
+        inputPanel.add(enameField);
+        inputPanel.add(new JLabel("Salary:"));
+        inputPanel.add(salaryField);
+        inputPanel.add(addButton);
+        add(inputPanel, BorderLayout.NORTH);
+        add(new JScrollPane(employeeTable), BorderLayout.CENTER);
+    }
+    private void addEmployee() {
+        String eno = enoField.getText();
+        String ename = enameField.getText();
+        String salary = salaryField.getText();
+        if (eno.isEmpty() || ename.isEmpty() || salary.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter all details", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Object[] rowData = {eno, ename, salary};
+        tableModel.addRow(rowData);
+        enoField.setText("");
+        enameField.setText("");
+        salaryField.setText("");
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Slip19().setVisible(true);
+            }
+        });
+    }
+}
+
+
+import tkinter as tk
+def add_course():
+    course = course_entry.get()
+    if course:
+        course_list.insert(tk.END, course)
+        course_entry.delete(0, tk.END)
+def remove_course():
+    selected_index = course_list.curselection()
+    if selected_index:
+        course_list.delete(selected_index)
+root = tk.Tk()
+root.title("Computer Science Courses")
+course_list = tk.Listbox(root)
+course_list.pack(padx=10, pady=10)
+course_entry = tk.Entry(root)
+course_entry.pack(padx=10, pady=5)
+add_button = tk.Button(root, text="Add Course", command=add_course)
+add_button.pack(padx=10, pady=5)
+remove_button = tk.Button(root, text="Remove Course", command=remove_course)
+remove_button.pack(padx=10, pady=5)
+root.mainloop()
+
+
+list1 = input("Enter elements for the first list separated by space: ").split()
+list2 = input("Enter elements for the second list separated by space: ").split()
+print("Original List 1:", list1)
+print("Original List 2:", list2)
+merged_list = list(zip(list1, list2))
+print("Merged List of Tuples:", merged_list)

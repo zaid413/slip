@@ -1,0 +1,154 @@
+public class Slip19 {
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Usage: java Slip19 <n1> <n2> <n3> ...");
+            return;
+        }
+        int n = args.length;
+        int[] numbers = new int[n];
+        int armstrongCount = 0;
+        for (int i = 0; i < n; i++) {
+            try {
+                numbers[i] = Integer.parseInt(args[i]);
+                if (isArmstrongNumber(numbers[i])) {
+                    armstrongCount++;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input: " + args[i] + " (skipping)");
+            }
+        }
+        int[] armstrongNumbers = new int[armstrongCount];
+        int j = 0;
+        for (int i = 0; i < n; i++) {
+            if (isArmstrongNumber(numbers[i])) {
+                armstrongNumbers[j] = numbers[i];
+                j++;
+            }
+        }
+        System.out.println("Armstrong numbers in the array:");
+        for (int armstrong : armstrongNumbers) {
+            System.out.println(armstrong);
+        }
+    }
+    public static boolean isArmstrongNumber(int number) {
+        int originalNumber, remainder, result = 0, n = 0;
+        originalNumber = number;
+        while (originalNumber != 0) {
+            originalNumber /= 10;
+            n++;
+        }       
+        originalNumber = number;        
+        while (originalNumber != 0) {
+            remainder = originalNumber % 10;
+            result += Math.pow(remainder, n);
+            originalNumber /= 10;
+        }
+        return (result == number);
+    }
+}
+
+
+import java.util.Scanner;
+class Product {
+    int pid;
+    String pname;
+    double price;
+    int qty;
+    public Product(int pid, String pname, double price, int qty) {
+        this.pid = pid;
+        this.pname = pname;
+        this.price = price;
+        this.qty = qty;
+    }
+    public double calculateTotalAmount() {
+        return price * qty;
+    }
+    public void displayProductDetails() {
+        System.out.println("Product ID: " + pid);
+        System.out.println("Product Name: " + pname);
+        System.out.println("Price: $" + price);
+        System.out.println("Quantity: " + qty);
+        System.out.println("Total Amount: $" + calculateTotalAmount());
+    }
+}
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of products: ");
+        int n = scanner.nextInt();
+        scanner.nextLine(); 
+        Product[] products = new Product[n];
+        for (int i = 0; i < n; i++) {
+            System.out.println("Enter product details for product " + (i + 1) + ":");
+            System.out.print("Product ID: ");
+            int pid = scanner.nextInt();
+            scanner.nextLine(); 
+            System.out.print("Product Name: ");
+            String pname = scanner.nextLine();
+            System.out.print("Price: $");
+            double price = scanner.nextDouble();
+            System.out.print("Quantity: ");
+            int qty = scanner.nextInt();
+            products[i] = new Product(pid, pname, price, qty);
+        }
+        double totalAmount = 0.0;
+        System.out.println("Product details and total amount for each product:");
+        for (Product product : products) {
+            product.displayProductDetails();
+            totalAmount += product.calculateTotalAmount();
+        }
+        System.out.println("Total Amount for all products: $" + totalAmount);
+        scanner.close();
+    }
+}
+
+
+import tkinter as tk
+def convert_to_uppercase():
+    output_label.config(text=input_entry.get().upper())
+window = tk.Tk()
+window.title("Uppercase Converter")
+instruction_label = tk.Label(window, text="Enter a string:")
+instruction_label.pack()
+input_entry = tk.Entry(window)
+input_entry.pack()
+convert_button = tk.Button(window, text="Convert to Uppercase", command=convert_to_uppercase)
+convert_button.pack()
+output_label = tk.Label(window, text="")
+output_label.pack()
+window.mainloop()
+
+
+class InvalidDateException(Exception):
+    def __init__(self, message="Invalid Date"):
+        self.message = message
+        super().__init__(self.message)
+class Date:
+    def __init__(self, day=0, month=0, year=0):
+        self.day = day
+        self.month = month
+        self.year = year
+    def is_valid_date(self):
+        if self.year < 1 or not (1 <= self.month <= 12):
+            return False
+        days_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if (self.year % 400 == 0 or (self.year % 100 != 0 and self.year % 4 == 0)) and self.month == 2:
+            days_in_month[2] = 29
+        return 1 <= self.day <= days_in_month[self.month]
+    def accept_date(self):
+        try:
+            self.day = int(input("Enter day: "))
+            self.month = int(input("Enter month: "))
+            self.year = int(input("Enter year: "))
+            if not self.is_valid_date():
+                raise InvalidDateException("Invalid Date Exception: The provided date is invalid.")
+        except ValueError:
+            raise InvalidDateException("Invalid Date Exception: Please enter valid numeric values for day, month, and year.")
+    def display_date(self):
+        print(f"Date: {self.day:02d}/{self.month:02d}/{self.year}")
+try:
+    my_date = Date()
+    my_date.accept_date()
+    my_date.display_date()
+except InvalidDateException as e:
+    print(e)

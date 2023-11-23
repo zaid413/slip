@@ -1,0 +1,138 @@
+Q.1.A
+
+Write a java program to display the contents of a file in reverse order.
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+public class Main
+{
+public static void main(String args[])throws Exception,IOException
+{
+Scanner scanner=new Scanner(new File("a.txt")).useDelimiter("\\z");
+String contents=scanner.next();
+contents=new StringBuffer(contents).reverse().toString();
+System.out.println("Reversed String:"+contents);
+FileWriter fstream=new FileWriter("a.txt");
+BufferedWriter out=new BufferedWriter(fstream);
+out.write(contents);
+out.close();
+}
+}
+
+
+Q.1.B
+
+Create a hashtable containing city name & STD code. Display the details of the hashtable. Also search for a specific city and display STD code of that city.
+
+ 
+
+import java.util.Hashtable;
+
+import java.util.Scanner;
+
+import java.io.*;
+
+public class CitySTDHashtable {
+
+    public static void main(String[] args) {
+
+        Hashtable<String, String> citySTDTable = new Hashtable<>();
+
+ 
+
+        // Populate the Hashtable with city names and STD codes
+
+        citySTDTable.put("New York", "212");
+
+        citySTDTable.put("Los Angeles", "213");
+
+        citySTDTable.put("Chicago", "312");
+
+        citySTDTable.put("San Francisco", "415");
+
+        citySTDTable.put("Boston", "617");
+
+ 
+
+        // Display the details of the Hashtable
+
+        System.out.println("City STD Codes:");
+
+        for (String city : citySTDTable.keySet()) {
+
+            System.out.println(city + " - STD Code: " + citySTDTable.get(city));
+
+        }
+
+ 
+
+        // Search for a specific city and display its STD code
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("\nEnter a city name to search for STD code: ");
+
+        String searchCity = scanner.nextLine();
+
+        String stdCode = citySTDTable.get(searchCity);
+
+ 
+
+        if (stdCode != null) {
+
+            System.out.println("STD Code for " + searchCity + ": " + stdCode);
+
+        } else {
+
+            System.out.println("City not found in the Hashtable.");
+
+        }
+
+    }
+
+}
+
+
+Q.2.A
+
+A) Define a class named Rectangle which can be constructed by a length and
+width. The Rectangle class has a method which can compute the area and
+Perimeter.
+class Ractangle():
+ def __init__(self,l,w):
+ self.l=l
+ self.w=w
+ def rectangle_area(self):
+ return self.l*self.w
+ def rectangle_Perimeter(self):
+ return (self.l*2)+(self.w*2)
+
+L=int(input('enter Length of Rectangle :'))
+W=int(input('enter Width of Rectangle :'))
+a1=Ractangle(L,W)
+print(a1.rectangle_area())
+print(a1.rectangle_Perimeter())
+
+Q.2.B
+
+
+B) Write a Python program to convert a tuple of string values to a tuple of integer
+ values. Original tuple values: (('333', '33'), ('1416', '55'))
+ New tuple values: ((333, 33), (1416, 55))
+tup1=(('333','33'),('1416','55'))
+a,b=tup1
+newlista=[]
+newlistb=[]
+arr=[]
+for i in a:
+ newlista.append(int(i))
+arr.append(newlista)
+for i in b:
+ newlistb.append(int(i))
+arr.append(newlistb)
+finaltup=tuple(map(tuple, arr))
+print(finaltup)

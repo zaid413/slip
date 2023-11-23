@@ -1,0 +1,107 @@
+import java.util.Scanner;
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the radius of the circle: ");
+        double radius = scanner.nextDouble();
+        double circleArea = calculateArea(radius);
+        System.out.println("Area of the circle: " + circleArea);
+        System.out.print("Enter the base of the triangle: ");
+        double base = scanner.nextDouble();
+        System.out.print("Enter the height of the triangle: ");
+        double height = scanner.nextDouble();
+        double triangleArea = calculateArea(base, height);
+        System.out.println("Area of the triangle: " + triangleArea);
+        System.out.print("Enter the length of the rectangle: ");
+        double length = scanner.nextDouble();
+        System.out.print("Enter the width of the rectangle: ");
+        double width = scanner.nextDouble();
+        double rectangleArea = calculateAreaRectangle(length, width);
+        System.out.println("Area of the rectangle: " + rectangleArea);
+        scanner.close();
+    }
+    public static double calculateArea(double radius) {
+        return Math.PI * radius * radius;
+    }
+    public static double calculateArea(double base, double height) {
+        return 0.5 * base * height;
+    }
+    public static double calculateAreaRectangle(double length, double width) {
+        return length * width;
+    }
+}
+
+
+import java.io.*;
+import java.util.Scanner;
+public class Slip19 {
+    public static void main(String[] args) {
+        String sourceFilePath = "C:/Users/Desktop/practcal/abj.txt";
+        String targetFilePath = "C:/Users/Desktop/practcal/abj2.txt";
+        File sourceFile = new File(sourceFilePath);
+        File targetFile = new File(targetFilePath);
+        if (!sourceFile.exists()) {
+            System.out.println("Source file does not exist.");
+            return;
+        }
+        try {
+            Scanner scanner = new Scanner(sourceFile);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(targetFile));
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String modifiedLine = modifyLine(line);
+                writer.write(modifiedLine);
+                writer.newLine();
+            }
+            scanner.close();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while copying the file.");
+        }
+        System.out.println("File copy with case change and digit replacement complete.");
+    }
+    public static String modifyLine(String line) {
+        StringBuilder modifiedLine = new StringBuilder();
+        for (char character : line.toCharArray()) {
+            if (Character.isLetter(character)) {
+                if (Character.isUpperCase(character)) {
+                    modifiedLine.append(Character.toLowerCase(character));
+                } else {
+                    modifiedLine.append(Character.toUpperCase(character));
+                }
+            } else if (Character.isDigit(character)) {
+                modifiedLine.append('*');
+            } else {
+                modifiedLine.append(character);
+            }
+        }
+        return modifiedLine.toString();
+    }
+}
+
+
+a = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89]
+result = [x for x in a if x < 5]
+print(result)
+
+
+class Person:
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
+class Employee(Person):
+    def __init__(self, name, address, salary):
+        super().__init__(name, address)
+        self.salary = salary
+    def display(self, number):
+        print(f'Employee({number}) Name: {self.name}\tAddress: {self.address}\tSalary: {self.salary}')
+n = int(input("Enter the number of employees: "))
+employees = []
+for i in range(n):
+    name = input(f'Enter name for employee {i + 1}: ')
+    address = input(f'Enter address for employee {i + 1}: ')
+    salary = int(input(f'Enter salary for employee {i + 1}: '))
+    employee = Employee(name, address, salary)
+    employees.append(employee)
+for i, employee in enumerate(employees, 1):
+    employee.display(i)

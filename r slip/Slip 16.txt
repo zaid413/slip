@@ -1,0 +1,238 @@
+Q.1.A
+
+Write a java program to calculate sum of digits of a given number using recursion.
+
+
+
+
+import java.io.*;
+
+ 
+
+public class SumOfDigits {
+
+    public static void main(String[] args) {
+
+        int number = 123;  // Change this to the number you want to calculate the sum for
+
+        int sum = calculateSumOfDigits(number);
+
+        System.out.println("The sum of digits in " + number + " is: " + sum);
+
+    }
+
+ 
+
+    public static int calculateSumOfDigits(int num) {
+
+        if (num == 0) {
+
+            return 0;  // Base case: If the number is 0, the sum is 0
+
+        } else {
+
+            // Calculate the sum of digits for the remaining part of the number
+
+            int lastDigit = num % 10; // Get the last digit
+
+            int remainingNumber = num / 10; // Remove the last digit
+
+            return lastDigit + calculateSumOfDigits(remainingNumber); // Recursive call
+
+        }
+
+    }
+
+}
+
+
+
+Q.1.B
+
+
+Write a java program to accept n employee names from user. Sort them in ascending 
+
+order and Display them.(Use array of object and Static keyword)
+
+             
+
+ 
+
+import java.io.*;
+
+ 
+
+import java.util.Scanner;
+
+ 
+
+public class EmployeeSort
+
+ {
+
+    static class Employee
+
+{
+
+        String name;
+
+ 
+
+        Employee(String name)
+
+{
+
+            this.name = name;
+
+        }
+
+ 
+
+        static void sortEmployeesByName(Employee[] employees)
+
+           {
+
+            for (int i = 0; i < employees.length; i++)
+
+             {
+
+                for (int j = i + 1; j < employees.length; j++)
+
+                  {
+
+                    if (employees[i].name.compareTo(employees[j].name) > 0)
+
+                          {
+
+                        Employee temp = employees[i];
+
+                        employees[i] = employees[j];
+
+                        employees[j] = temp;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+ 
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of employees (n): ");
+
+        int n = scanner.nextInt();
+
+        scanner.nextLine(); // Consume the newline character
+
+ 
+
+        Employee[] employees = new Employee[n];
+
+ 
+
+        // Accept employee names from the user
+
+        for (int i = 0; i < n; i++) {
+
+            System.out.print("Enter the name of employee " + (i + 1) + ": ");
+
+            String name = scanner.nextLine();
+
+            employees[i] = new Employee(name);
+
+        }
+
+ 
+
+        // Sort the employee names in ascending order using a static method
+
+        Employee.sortEmployeesByName(employees);
+
+ 
+
+        // Display the sorted employee names
+
+        System.out.println("Sorted Employee Names:");
+
+        for (int i = 0; i < n; i++) {
+
+            System.out.println(employees[i].name);
+
+        }
+
+ 
+
+        scanner.close();
+
+    }
+
+}
+
+Q.2.A
+
+
+A) Write a python script to create a class Rectangle with data member’s length,
+width and methods area, perimeter which can compute the area and perimeter of
+rectangle.
+class Ractangle():
+ def __init__(self,l,w):
+ self.l=l
+ self.w=w
+ def rectangle_area(self):
+ return self.l*self.w
+ def rectangle_Perimeter(self):
+ return (self.l*2)+(self.w*2)
+
+L=int(input('enter Length of Rectangle :'))
+W=int(input('enter Width of Rectangle :'))
+a1=Ractangle(L,W)
+print("Area=",a1.rectangle_area())
+print("Perimeter",a1.rectangle_Perimeter())
+
+Q.2.B
+
+
+
+B) Write Python GUI program to add items in listbox widget and to print and
+delete the selected items from listbox on button click. Provide three separate
+buttons to add, print and delete.
+import tkinter as tk
+def add_item():
+ item = entry.get()
+ if item:
+ listbox.insert(tk.END, item)
+ entry.delete(0, tk.END)
+def print_items():
+ selected_items = listbox.curselection()
+ for index in selected_items:
+ print(listbox.get(index))
+def delete_items():
+ selected_items = listbox.curselection()
+ for index in selected_items:
+ listbox.delete(index)
+# Create the main window
+root = tk.Tk()
+root.title("Listbox Example")
+# Create a Listbox widget
+listbox = tk.Listbox(root, selectmode=tk.MULTIPLE)
+listbox.pack()
+# Entry widget for adding new items
+entry = tk.Entry(root)
+entry.pack()
+# Add, Print, and Delete buttons
+add_button = tk.Button(root, text="Add", command=add_item)
+print_button = tk.Button(root, text="Print", command=print_items)
+delete_button = tk.Button(root, text="Delete", command=delete_items)
+add_button.pack()
+print_button.pack()
+delete_button.pack()
+root.mainloop()
+

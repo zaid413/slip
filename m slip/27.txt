@@ -1,0 +1,135 @@
+import java.util.Scanner;
+class OutOfRangeException extends Exception {
+    public OutOfRangeException(String message) {
+        super(message);
+    }
+}
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int number = scanner.nextInt();
+        try {
+            checkRange(number);
+            System.out.println("Factors of " + number + ":");
+            displayFactors(number);
+        } catch (OutOfRangeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void checkRange(int number) throws OutOfRangeException {
+        if (number > 1000) {
+            throw new OutOfRangeException("Number is out of Range");
+        }
+    }
+    private static void displayFactors(int number) {
+        for (int i = 1; i <= number; i++) {
+            if (number % i == 0) {
+                System.out.println(i);
+            }
+        }
+    }
+}
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+public class Slip19 extends JFrame {
+    private JTextField directoryTextField;
+    private JButton listButton;
+    private JList fileList;
+    public Slip19() {
+        setTitle("File Lister");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        initComponents();
+        addEventListeners();
+    }
+    private void initComponents() {
+        setLayout(new FlowLayout());
+        directoryTextField = new JTextField(20);
+        listButton = new JButton("List Files");
+        fileList = new JList();
+
+        add(directoryTextField);
+        add(listButton);
+        add(new JScrollPane(fileList));
+    }
+    private void addEventListeners() {
+        listButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String directoryPath = directoryTextField.getText();
+                listFilesAndSubdirectories(directoryPath);
+            }
+        });
+    }
+    private void listFilesAndSubdirectories(String directoryPath) {
+        DefaultListModel model = new DefaultListModel();
+        File directory = new File(directoryPath);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                model.addElement(file.getName());
+            }
+        } else {
+            model.addElement("Invalid directory path or no access to directory");
+        }
+        fileList.setModel(model);
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Slip19().setVisible(true);
+            }
+        });
+    }
+}
+
+
+num_tuples = int(input("Enter the number of tuples: "))
+data = []
+for _ in range(num_tuples):
+    number = int(input("Enter a number: "))
+    fruit = input("Enter a fruit: ")
+    data.append((number, fruit))
+print("Original List of Tuples:", data)
+numbers, fruits = zip(*data)
+print("Numbers:", list(numbers))
+print("Fruits:", list(fruits))
+
+
+import tkinter as tk
+def convert_numbers():
+    decimal_value = entry.get()
+    try:
+        if not decimal_value:
+            raise ValueError("Input is empty")
+        decimal_value = float(decimal_value)
+        binary_label.config(text=f"Binary: {bin(int(decimal_value))[2:]}")
+        octal_label.config(text=f"Octal: {oct(int(decimal_value))[2:]}")
+        hexadecimal_label.config(text=f"Hexadecimal: {hex(int(decimal_value))[2:]}")
+    except ValueError:
+        binary_label.config(text="Invalid Input")
+        octal_label.config(text="Invalid Input")
+        hexadecimal_label.config(text="Invalid Input")
+window = tk.Tk()
+window.title("Number Converter")
+decimal_label = tk.Label(window, text="Enter a decimal number:")
+decimal_label.pack()
+entry = tk.Entry(window)
+entry.pack()
+convert_button = tk.Button(window, text="Convert", command=convert_numbers)
+convert_button.pack()
+binary_label = tk.Label(window, text="Binary:")
+binary_label.pack()
+octal_label = tk.Label(window, text="Octal:")
+octal_label.pack()
+hexadecimal_label = tk.Label(window, text="Hexadecimal:")
+hexadecimal_label.pack()
+window.mainloop()

@@ -1,0 +1,224 @@
+Q.1.A
+
+Write a menu driven java program using command line arguments for the following:         
+
+1.  Addition
+
+2.  Subtraction
+
+3.  Multiplication
+
+4.  Division.
+
+ 
+
+import java.io.*;
+
+public class CommandLineCalculator {
+
+    public static void main(String[] args) {
+
+        if (args.length != 3) {
+
+            System.out.println("CommandLine Argument");
+
+            return;
+
+        }
+
+ 
+
+        String operation = args[0];
+
+        double num1 = Double.parseDouble(args[1]);
+
+        double num2 = Double.parseDouble(args[2]);
+
+ 
+
+        double result = 0;
+
+ 
+
+        switch (operation) {
+
+            case "1":
+
+                result = num1 + num2;
+
+                System.out.println("Addition Result: " + result);
+
+                break;
+
+            case "2":
+
+                result = num1 - num2;
+
+                System.out.println("Subtraction Result: " + result);
+
+                break;
+
+            case "3":
+
+                result = num1 * num2;
+
+                System.out.println("Multiplication Result: " + result);
+
+                break;
+
+            case "4":
+
+                if (num2 == 0) {
+
+                    System.out.println("Error: Division by zero is not allowed.");
+
+                } else {
+
+                    result = num1 / num2;
+
+                    System.out.println("Division Result: " + result);
+
+                }
+
+                break;
+
+            default:
+
+                System.out.println("Invalid operation. Please choose 1 for Addition, 2 for Subtraction, 3 for Multiplication, or 4 for Division.");
+
+        }
+
+    }
+
+}
+
+Q.1.B
+
+Write an applet application to display Table lamp.The color of lamp should get change randomly
+
+ import java.applet.*;
+
+ import java.awt.*;
+
+  
+
+public class Lamp extends java.applet.Applet {
+
+   public void init() {
+
+     resize(300,300);
+
+   }
+
+     
+
+  public void paint(Graphics g) {
+
+     // the platform
+
+     g.fillRect(0,250,290,290);
+
+     // the base of the lamp
+
+     g.drawLine(125,250,125,160);
+
+     g.drawLine(175,250,175,160);
+
+ 
+
+    // the lamp shade; two arcs
+
+     g.drawArc(85,157,130,50,-65,312);
+
+     g.drawArc(85,87,130,50,62,58);
+
+     g.drawLine(85,177,119,89);
+
+     g.drawLine(215,177,181,89);
+
+ 
+
+     // pattern on the shade
+
+     g.fillArc(78,120,40,40,63,-174);
+
+     g.fillOval(120,96,40,40);
+
+     g.fillArc(173,100,40,40,110,180);
+
+   }
+
+ }
+
+ 
+
+Lamp.html
+
+<html> 
+
+<body> 
+
+<applet code="Lamp.class" width="300" height="300"> 
+
+</applet> 
+
+</body> 
+
+</html>
+
+
+Q.2.A
+
+A) Write a Python program to compute element-wise sum of given tuples.
+Original lists: (1, 2, 3, 4) (3, 5, 2, 1) (2, 2, 3, 1)
+Element-wise sum of the said tuples: (6, 9, 8, 6)
+x = (1,2,3,4);y = (3,5,2,1);z = (2,2,3,1)
+print("Original lists:")
+print(x)
+print(y)
+print(z)
+print("\nElement-wise sum of the said tuples:")
+result = tuple(map(sum, zip(x, y, z)))
+print(result)
+
+
+Q.2.B
+
+
+B) Write Python GUI program to add menu bar with name of colors as options to
+change the background color as per selection from menu option.
+from tkinter import Menu, Tk, mainloop
+def redcolor():
+ root.configure(background = 'red')
+def greencolor():
+ root.configure(background = 'green')
+def yellowcolor():
+ root.configure(background = 'yellow')
+def violetcolor():
+ root.configure(background = 'violet')
+def bluecolor():
+ root.configure(background = 'blue')
+def cyancolor():
+ root.configure(background = 'cyan')
+
+root = Tk()
+root.title('COLOR MENU')
+menubar = Menu(root)
+color = Menu(menubar, tearoff = 0)
+menubar.add_cascade(label ='color', menu = color)
+color.add_command(label ='Red', command = redcolor,activebackground='red',
+ activeforeground='cyan')
+color.add_command(label ='Green',command = greencolor,activebackground='green',
+ activeforeground='blue')
+color.add_command(label ='Blue',command = bluecolor,activebackground='blue',
+ activeforeground='yellow')
+color.add_command(label ='Yellow',command = yellowcolor,activebackground='yellow',
+ activeforeground='blue')
+color.add_command(label ='Cyan',command = cyancolor,activebackground='cyan',
+ activeforeground='red')
+color.add_command(label ='Violet',command = violetcolor,activebackground='violet',
+ activeforeground='green')
+color.add_separator()
+color.add_command(label ='Exit',command = root.destroy)
+root.config(menu = menubar)
+mainloop()

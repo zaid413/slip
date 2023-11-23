@@ -1,0 +1,113 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Integer> numberList = new ArrayList();
+        System.out.print("Enter the number of integers (n): ");
+        int n = scanner.nextInt();
+        System.out.println("Enter " + n + " integers:");
+        for (int i = 0; i < n; i++) {
+            int num = scanner.nextInt();
+            numberList.add(num);
+        }
+        System.out.println("Elements in reverse order:");
+        for (int i = numberList.size() - 1; i >= 0; i--) {
+            System.out.println(numberList.get(i));
+        }
+        scanner.close();
+    }
+}
+
+
+import java.util.Scanner;
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter your name: ");
+        String name = scanner.nextLine();
+        String upperCaseName = name.toUpperCase();
+        System.out.println("Hello, " + upperCaseName + ", nice to meet you!");
+        scanner.close();
+    }
+}
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class Slip19 extends JFrame {
+    private JTextField nameField;
+    private JLabel greetingLabel;
+    public Slip19() {
+        setTitle("Greeting Program");
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new FlowLayout());
+        JLabel nameLabel = new JLabel("Enter your name:");
+        nameField = new JTextField(20);
+        JButton greetButton = new JButton("Greet");
+        greetingLabel = new JLabel();
+        add(nameLabel);
+        add(nameField);
+        add(greetButton);
+        add(greetingLabel);
+        greetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                greetUser();
+            }
+        });
+    }
+    private void greetUser() {
+        String userName = nameField.getText();
+        String greeting = "Hello, " + userName.toUpperCase() + ", nice to meet you!";
+        greetingLabel.setText(greeting);
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                Slip19 app = new Slip19();
+                app.setVisible(true);
+            }
+        });
+    }
+}
+
+
+try:
+ num=int(input('Enter a number :'))
+except ValueError:
+ print("\nThis is not a number!")
+else:
+ print('\nnumber is : ',num)
+
+
+queue = []
+while True:
+    print("Queue Operations:")
+    print("1. Enqueue (Add item)")
+    print("2. Dequeue (Remove item)")
+    print("3. Display Queue")
+    print("4. Exit")
+    choice = input("Enter your choice (1/2/3/4): ")
+    if choice == "1":
+        item = input("Enter the item to enqueue: ")
+        queue.append(item)
+        print(f"{item} added to the queue.")
+    elif choice == "2":
+        if queue:
+            removed_item = queue.pop(0)
+            print(f"{removed_item} removed from the queue.")
+        else:
+            print("Queue is empty.")
+    elif choice == "3":
+        if queue:
+            print("Current Queue:", queue)
+        else:
+            print("Queue is empty.")
+    elif choice == "4":
+        break
+    else:
+        print("Invalid choice. Please select 1, 2, 3, or 4.")

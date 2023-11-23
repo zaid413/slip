@@ -1,0 +1,74 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+public class Slip19 {
+    public static void main(String[] args) throws IOException {
+        String filePath = "qw.txt"; 
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        int character;
+        while ((character = reader.read()) != -1) {
+            System.out.println("Character: " + (char) character + ", ASCII Value: " + character);
+        }
+        reader.close();
+    }
+}
+
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
+public class TempleApplet  extends Applet {
+    public void paint(Graphics g) {
+        Color templeColor = new Color(210, 180, 140); 
+        Color roofColor = new Color(255, 0, 0); 
+        Color doorColor = new Color(100, 70, 40);
+        Color windowColor = new Color(173, 216, 230); 
+        g.setColor(templeColor);
+        g.fillRect(50, 150, 300, 200);
+        int[] roofX = {50, 200, 350};
+        int[] roofY = {150, 50, 150};
+        g.setColor(roofColor);
+        g.fillPolygon(roofX, roofY, 3);
+        g.setColor(doorColor);
+        g.fillRect(150, 150, 100, 200);
+        g.setColor(windowColor);
+        g.fillRect(80, 200, 50, 50);
+        g.fillRect(270, 200, 50, 50);
+    }
+}
+
+
+calculateArea = lambda shape, length, width=None: length * length if shape == 'square' else length * width if shape == 'rectangle' and width is not None else 'Invalid shape'
+length_square = float(input("Enter the length of the square: "))
+print(f"Area of the square: {calculateArea('square', length_square)}")
+length_rectangle = float(input("Enter the length of the rectangle: "))
+width_rectangle = float(input("Enter the width of the rectangle: "))
+print(f"Area of the rectangle: {calculateArea('rectangle', length_rectangle, width_rectangle)}")
+
+
+import tkinter as tk
+def alter_sentence():
+    sentence = entry.get()
+    altered_sentence = ""
+    for char in sentence:
+        if char.isalpha():
+            if char.islower():
+                altered_sentence += char.upper()
+            else:
+                altered_sentence += char.lower()
+        elif char.isdigit():
+            altered_sentence += "?"
+        elif char.isspace():
+            altered_sentence += "*"
+        else:
+            altered_sentence += char
+    result_label.config(text=altered_sentence)
+root = tk.Tk()
+root.title("Sentence Alteration")
+entry = tk.Entry(root, width=30)
+entry.pack()
+alter_button = tk.Button(root, text="Alter Sentence", command=alter_sentence)
+alter_button.pack()
+result_label = tk.Label(root, text="", wraplength=300)
+result_label.pack()
+root.mainloop()

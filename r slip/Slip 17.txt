@@ -1,0 +1,318 @@
+Q.1.A
+
+Write a java Program to accept ‘n’ no’s through command line and store only Armstrong no’s into the array and display that array.
+
+import java.util.ArrayList;
+
+import java.io.*;
+
+public class ArmstrongNumbers {
+
+    public static void main(String[] args) {
+
+        if (args.length == 0) {
+
+            System.out.println("Please provide some numbers as command-line arguments.");
+
+            return;
+
+        }
+
+ 
+
+        int n = args.length;
+
+        int[] numbers = new int[n];
+
+ 
+
+        for (int i = 0; i < n; i++) {
+
+            try {
+
+                numbers[i] = Integer.parseInt(args[i]);
+
+            } catch (NumberFormatException e) {
+
+                System.out.println("Invalid input: " + args[i] + " is not a valid number.");
+
+                return;
+
+            }
+
+        }
+
+ 
+
+        ArrayList<Integer> armstrongNumbers = new ArrayList<>();
+
+        for (int number : numbers) {
+
+            if (isArmstrongNumber(number)) {
+
+                armstrongNumbers.add(number);
+
+            }
+
+        }
+
+ 
+
+        if (armstrongNumbers.isEmpty()) {
+
+            System.out.println("No Armstrong numbers found in the provided input.");
+
+        } else {
+
+            System.out.println("Armstrong numbers in the input:");
+
+            for (int armstrongNumber : armstrongNumbers) {
+
+                System.out.println(armstrongNumber);
+
+            }
+
+        }
+
+    }
+
+ 
+
+    public static boolean isArmstrongNumber(int number) {
+
+        int originalNumber, remainder, result = 0;
+
+        originalNumber = number;
+
+ 
+
+        while (originalNumber != 0) {
+
+            remainder = originalNumber % 10;
+
+            result += Math.pow(remainder, 3);
+
+            originalNumber /= 10;
+
+        }
+
+ 
+
+        return result == number;
+
+    }
+
+}
+
+Q.1.B
+
+
+Define a class Product (pid, pname, price, qty). Write a function to accept the product details, display it and  calculate total amount. (use array of Objects)
+
+
+
+
+import java.util.Scanner;
+
+import java.io.*;
+
+class Product {
+
+    int pid;
+
+    String pname;
+
+    double price;
+
+    int qty;
+
+ 
+
+    public Product(int pid, String pname, double price, int qty) {
+
+        this.pid = pid;
+
+        this.pname = pname;
+
+        this.price = price;
+
+        this.qty = qty;
+
+    }
+
+ 
+
+    public double calculateTotal() {
+
+        return price * qty;
+
+    }
+
+ 
+
+    public void displayProduct() {
+
+        System.out.println("Product ID: " + pid);
+
+        System.out.println("Product Name: " + pname);
+
+        System.out.println("Price: $" + price);
+
+        System.out.println("Quantity: " + qty);
+
+    }
+
+}
+
+ 
+
+public class ProductDemo {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+       
+
+        System.out.print("Enter the number of products: ");
+
+        int numProducts = scanner.nextInt();
+
+       
+
+        Product[] products = new Product[numProducts];
+
+ 
+
+        for (int i = 0; i < numProducts; i++) {
+
+            System.out.println("Enter details for product #" + (i + 1));
+
+            System.out.print("Product ID: ");
+
+            int pid = scanner.nextInt();
+
+            scanner.nextLine(); // Consume newline
+
+            System.out.print("Product Name: ");
+
+            String pname = scanner.nextLine();
+
+            System.out.print("Price: $");
+
+            double price = scanner.nextDouble();
+
+            System.out.print("Quantity: ");
+
+            int qty = scanner.nextInt();
+
+            products[i] = new Product(pid, pname, price, qty);
+
+        }
+
+ 
+
+        System.out.println("Product Details:");
+
+        double totalAmount = 0;
+
+ 
+
+        for (Product product : products) {
+
+            product.displayProduct();
+
+            double productTotal = product.calculateTotal();
+
+            System.out.println("Total Amount for this product: $" + productTotal);
+
+            totalAmount += productTotal;
+
+            System.out.println();
+
+        }
+
+ 
+
+        System.out.println("Total Amount for all products: $" + totalAmount);
+
+    }
+
+}
+
+Q.2.A
+
+
+A) Write Python GUI program that takes input string and change letter to upper
+case when a button is pressed.
+import tkinter as tk
+# Function to convert the input text to uppercase
+def convert_to_uppercase():
+ input_text = input_entry.get()
+ uppercase_text = input_text.upper()
+ output_label.config(text=uppercase_text)
+# Create the main window
+window = tk.Tk()
+window.title("Uppercase Converter")
+# Create a label to instruct the user
+instruction_label = tk.Label(window, text="Enter a string:")
+instruction_label.pack()
+# Create an entry widget for input
+input_entry = tk.Entry(window)
+input_entry.pack()
+# Create a button to trigger the conversion
+convert_button = tk.Button(window, text="Convert to Uppercase",
+command=convert_to_uppercase)
+convert_button.pack()
+# Create a label to display the result
+output_label = tk.Label(window, text="")
+output_label.pack()
+# Start the Tkinter main loop
+window.mainloop()
+
+Q.2.B
+
+
+
+B) Define a class Date (Day, Month, Year) with functions to accept and display it.
+Accept date from user. Throw user defined exception “invalid Date Exception” if
+the date is invalid.
+class InvalidDateException(Exception):
+ def __init__(self, message="Invalid Date"):
+ self.message = message
+ super().__init__(self.message)
+class Date:
+ def __init__(self, day, month, year):
+ self.day = day
+ self.month = month
+ self.year = year
+ def is_valid_date(self):
+ if self.year < 1:
+ return False
+ if not 1 <= self.month <= 12:
+ return False
+ days_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+ if self.year % 400 == 0 or (self.year % 100 != 0 and self.year % 4 == 0):
+ days_in_month[2] = 29
+ if not 1 <= self.day <= days_in_month[self.month]:
+ return False
+ return True
+ def accept_date(self):
+ try:
+ self.day = int(input("Enter day: "))
+ self.month = int(input("Enter month: "))
+ self.year = int(input("Enter year: "))
+ if not self.is_valid_date():
+ raise InvalidDateException("Invalid Date Exception: The provided date is
+invalid.")
+ except ValueError:
+ raise InvalidDateException("Invalid Date Exception: Please enter valid numeric
+values for day, month, and year.")
+ def display_date(self):
+ print(f"Date: {self.day:02d}/{self.month:02d}/{self.year}")
+try:
+ my_date = Date(0, 0, 0) # Initialize with default values
+ my_date.accept_date()
+ my_date.display_date()
+except InvalidDateException as e:
+ print(e)

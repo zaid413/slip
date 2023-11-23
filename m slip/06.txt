@@ -1,0 +1,134 @@
+ import java.util.*;
+class NumberZero extends Exception {
+    NumberZero() {
+    }
+}
+class Number {
+    static int no;
+    Number() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter no");
+        no = scanner.nextInt();
+        try {
+            if (no == 0) {
+                throw new NumberZero();
+            }
+            cal();
+        } catch (NumberZero e) {
+            System.out.println("Number Is Zero");
+        } finally {
+            scanner.close();
+        }
+    }
+    void cal() {
+        int l, r;
+        l = no % 10;
+        r = 0;
+        int tempNo = no;
+        while (tempNo > 0) {
+            r = tempNo % 10;
+            tempNo /= 10;
+        }
+        System.out.println("Addition of the first and last digit = " + (l + r));
+    }
+}
+public class Slip19 {
+    public static void main(String a[]) {
+        Number n = new Number();
+    }
+}
+
+
+import java.util.Scanner;
+public class Slip19  {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter rows of the matrix: ");
+        int row = sc.nextInt();
+        System.out.print("Enter columns of the matrix: ");
+        int col = sc.nextInt();
+        int[][] matrix = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                System.out.print("Element at index [" + i + "][" + j + "]: ");
+                matrix[i][j] = sc.nextInt();
+            }
+        }
+        sc.close();
+        System.out.println("\nReal matrix:\n");
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+        int[][] transpose = new int[col][row];
+        for (int i = 0; i < col; i++) {
+            for (int j = 0; j < row; j++) {
+                transpose[i][j] = matrix[j][i];
+            }
+        }
+        System.out.println("\nTranspose of the matrix:\n");
+        for (int i = 0; i < col; i++) {
+            for (int j = 0; j < row; j++) {
+                System.out.print(transpose[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+import math
+def cube_area_volume(side_length):
+    cube_area = 6 * side_length ** 2
+    cube_volume = side_length ** 3
+    return cube_area, cube_volume
+def sphere_area_volume(radius):
+    sphere_area = 4 * math.pi * radius ** 2
+    sphere_volume = (4/3) * math.pi * radius ** 3
+    return sphere_area, sphere_volume
+cube_side_length = float(input("Enter the side length of the cube: "))
+sphere_radius = float(input("Enter Radius of the Sphere: "))
+cube_area, cube_volume = cube_area_volume(cube_side_length)
+sphere_area, sphere_volume = sphere_area_volume(sphere_radius)
+print("Cube with side length", cube_side_length)
+print("Area:", cube_area)
+print("Volume:", cube_volume)
+print("Sphere with radius", sphere_radius)
+print("Surface Area:", sphere_area)
+print("Volume:", sphere_volume)
+
+
+import tkinter as tk
+def update_label_font():
+    new_font = (font_name.get(), font_size.get())
+    if is_bold.get():
+        new_font += ("bold",)
+    label.config(font=new_font)
+    label.config(text=font_name.get())
+app = tk.Tk()
+app.title("Label Font Changer")
+font_name = tk.StringVar()
+font_name.set("Arial")
+font_size = tk.IntVar()
+font_size.set(12)
+is_bold = tk.BooleanVar()
+is_bold.set(False)
+label = tk.Label(app, text=font_name.get(), font=("Arial", 12))
+label.pack(pady=20)
+font_name_label = tk.Label(app, text="Font Name:")
+font_name_label.pack()
+font_name_entry = tk.Entry(app, textvariable=font_name)
+font_name_entry.pack()
+bold_label = tk.Label(app, text="Bold:")
+bold_label.pack()
+bold_checkbutton = tk.Checkbutton(app, variable=is_bold, text="Bold", command=update_label_font)
+bold_checkbutton.pack()
+font_size_label = tk.Label(app, text="Font Size:")
+font_size_label.pack()
+font_size_entry = tk.Entry(app, textvariable=font_size)
+font_size_entry.pack()
+font_size_button = tk.Button(app, text="Apply", command=update_label_font)
+font_size_button.pack()
+app.mainloop()

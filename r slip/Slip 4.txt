@@ -1,0 +1,333 @@
+Q.1.A
+
+import java.util.Scanner;
+
+public class Main
+
+{
+
+            public static void main(String str[]) {
+
+                         Scanner sc = new Scanner(System.in);
+
+                        System.out.println("Enter an string");
+
+                        String str1 = sc.nextLine();
+
+                        try{
+
+                        for(int i = 0; i<=str1.length() ; i=i+2){
+
+                           System.out.println(str1.charAt(i));
+
+                        }
+
+                        } catch(StringIndexOutOfBoundsException e) {
+
+            System.out.println("String index out of bounds. String length: " + str1.length());
+
+        }
+
+            }
+
+}
+
+Q.1.B
+
+
+ Write a java program using Applet to implement a simple arithmetic calculator.
+
+ Calculator.java
+
+ import java.awt.*;
+
+import java.awt.event.*;
+
+import java.applet.*;
+
+public class Calculator extends Applet implements ActionListener
+
+{
+
+String str = " ";
+
+int v1, v2, result;
+
+TextField t1;
+
+Button b[] = new Button[10];
+
+Button add, sub, mul, div, clear, mod, equals;
+
+char choice;
+
+public void init()
+
+{
+
+Color k = new Color(120, 89, 90);
+
+setBackground(k);
+
+t1 = new TextField(10);
+
+GridLayout g1 = new GridLayout(4, 5);
+
+setLayout(g1);
+
+ 
+
+for (int i = 0; i < 10; i++)
+
+{
+
+b[i] = new Button("" + i);
+
+}
+
+add = new Button("add");
+
+sub = new Button("sub");
+
+mul = new Button("mul");
+
+div = new Button("div");
+
+mod = new Button("mod");
+
+clear = new Button("clear");
+
+equals = new Button("equals");
+
+t1.addActionListener(this);
+
+add(t1);
+
+for (int i = 0; i < 10; i++)
+
+{
+
+add(b[i]);
+
+}
+
+add(add);
+
+add(sub);
+
+add(mul);
+
+add(div);
+
+add(mod);
+
+add(clear);
+
+add(equals);
+
+for (int i = 0; i < 10; i++)
+
+{
+
+b[i].addActionListener(this);
+
+}
+
+add.addActionListener(this);
+
+sub.addActionListener(this);
+
+mul.addActionListener(this);
+
+div.addActionListener(this);
+
+mod.addActionListener(this);
+
+clear.addActionListener(this);
+
+equals.addActionListener(this);
+
+}
+
+public void actionPerformed(ActionEvent ae)
+
+{
+
+String str = ae.getActionCommand();
+
+char ch = str.charAt(0);
+
+if (Character.isDigit(ch))
+
+t1.setText(t1.getText() + str);
+
+else
+
+{
+
+if (str.equals("add"))
+
+{
+
+v1 = Integer.parseInt(t1.getText());
+
+choice = '+';
+
+t1.setText("");
+
+}
+
+else if (str.equals("sub"))
+
+{
+
+v1 = Integer.parseInt(t1.getText());
+
+choice = '-';
+
+t1.setText("");
+
+}
+
+if (str.equals("mul"))
+
+{
+
+v1 = Integer.parseInt(t1.getText());
+
+choice = '*';
+
+t1.setText("");
+
+}
+
+if (str.equals("div"))
+
+{
+
+v1 = Integer.parseInt(t1.getText());
+
+choice = '/';
+
+t1.setText("");
+
+}
+
+if (str.equals("mod"))
+
+{
+
+v1 = Integer.parseInt(t1.getText());
+
+choice = '%';
+
+t1.setText("");
+
+}
+
+if (str.equals("clear"))
+
+{
+
+t1.setText("");
+
+}
+
+if (str.equals("equals"))
+
+{
+
+v2 = Integer.parseInt(t1.getText());
+
+switch (choice)
+
+{
+
+case '+': result = v1 + v2;
+
+break;
+
+case '-': result = v1 - v2;
+
+break;
+
+case '*': result = v1 * v2;
+
+break;
+
+case '/': result = v1 / v2;
+
+break;
+
+case '%': result = v1 % v2;
+
+break;
+
+}
+
+t1.setText("" + result);
+
+}
+
+}
+
+}
+
+}
+
+ Calculator.html
+
+ <applet code="Calculator.class" width=400 height=400></applet>
+
+C:\Program Files\Java\jdk1.6.0\bin\Java Slips>javac Calculator.java
+
+C:\Program Files\Java\jdk1.6.0\bin\Java Slips>appletviewer Calculator.html
+
+
+
+
+A) Write a Python program to check if a given key already exists in a
+dictionary. If key exists replace with another key/value pair.
+my_dict = {'apple': 5, 'banana': 2, 'cherry': 8}
+# Key to check for existence
+key_to_check = 'banana'
+# Replacement key and value
+replacement_key = 'kiwi'
+replacement_value = 3
+# Check if the key exists in the dictionary
+if key_to_check in my_dict:
+ # Replace the key with the new key/value pair
+ my_dict[replacement_key] = replacement_value
+ del my_dict[key_to_check]
+else:
+ print(f"The key '{key_to_check}' does not exist in the dictionary.")
+# Print the updated dictionary
+print("Updated dictionary:", my_dict)
+
+
+
+
+B) Define a class Employee having members id, name, department, salary.
+Create a subclass called manager with member bonus. Define methods
+accept and display in both the classes. Create n objects of the manager class
+and display the details of the manager having the maximum total salary
+(salary+bonus).
+class Employee:
+ def __init__(self, id, name, department, salary):
+ self.id=id
+ self.name=name
+ self.department=department
+ self.salary=salary
+
+class manager(Employee):
+ def __init__(self, id, name, department, salary ,bonus):
+ super(manager, self).__init__(id, name, department, salary)
+ self.bonus=bonus
+
+ def totalsalary(self):
+ print(self.name,'got total salary :',self.salary+self.bonus)
+
+n=manager('A023','AMAR','GENERAL MANAGEMENT',20000,8000)
+m=manager('A025','priya','MARKETIG',25000,6400)
+n.totalsalary()
+m.totalsalary()

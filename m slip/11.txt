@@ -1,0 +1,118 @@
+public class Slip19 {
+    public static void main(String[] args) {
+        if (args.length != 3) {
+            System.out.println("Usage: java Calculator <num1> <operation> <num2>");
+            System.out.println("Valid operations: ");
+            System.out.println("1. Addition (+)");
+            System.out.println("2. Subtraction (-)");
+            System.out.println("3. Multiplication (x)");
+            System.out.println("4. Division (/)");
+            return;
+        }     
+        double num1 = Double.parseDouble(args[0]);
+        String operation = args[1];
+        double num2 = Double.parseDouble(args[2]);
+        double result = 0.0;
+        if (operation.equals("+")) {
+            result = num1 + num2;
+        } else if (operation.equals("-")) {
+            result = num1 - num2;
+        } else if (operation.equals("x")) {
+            result = num1 * num2;
+        } else if (operation.equals("/")) {
+            if (num2 != 0) {
+                result = num1 / num2;
+            } else {
+                System.out.println("Error: Division by zero is not allowed.");
+                return;
+            }
+        } else {
+            System.out.println("Invalid operation: " + operation);
+            return;
+        }
+        System.out.println("Result: " + result);
+    }
+}
+
+
+import java.awt.*;
+import java.applet.*;
+import java.util.Timer;
+import java.util.TimerTask;
+public class lamp extends Applet {
+    private float R, G, B;
+    private Color lampColor;
+    public void init() {
+        Timer timer = new Timer();
+        timer.schedule(new ColorChangeTask(), 0, 1000); // Change color every 1 second
+    }
+    public void paint(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.drawRect(80, 250, 150, 50);
+        g.drawLine(125, 250, 125, 160);
+        g.drawLine(175, 250, 175, 160);
+        g.drawArc(85, 157, 130, 50, -65, 312);
+        g.drawArc(85, 87, 130, 50, 62, 58);
+        g.drawLine(85, 177, 119, 89);
+        g.drawLine(215, 177, 181, 89);
+        g.setColor(lampColor);
+        g.fillArc(85, 157, 130, 50, -65, 312);
+        g.fillArc(85, 87, 130, 50, 62, 58);
+    }
+    private class ColorChangeTask extends TimerTask {
+        @Override
+        public void run() {
+            R = (float) Math.random();
+            G = (float) Math.random();
+            B = (float) Math.random();
+            lampColor = new Color(R, G, B);
+            repaint();
+        }
+    }
+}
+
+
+x = (1,2,3,4);y = (3,5,2,1);z = (2,2,3,1)
+print("Original lists:")
+print(x)
+print(y)
+print(z)
+print("\nElement-wise sum of the said tuples:")
+result = tuple(map(sum, zip(x, y, z)))
+print(result)
+
+
+from tkinter import Menu, Tk, mainloop
+def redcolor():
+ root.configure(background = 'red')
+def greencolor():
+ root.configure(background = 'green')
+def yellowcolor():
+ root.configure(background = 'yellow')
+def violetcolor():
+ root.configure(background = 'violet')
+def bluecolor():
+ root.configure(background = 'blue')
+def cyancolor():
+ root.configure(background = 'cyan')
+root = Tk()
+root.title('COLOR MENU')
+menubar = Menu(root)
+color = Menu(menubar, tearoff = 0)
+menubar.add_cascade(label ='color', menu = color)
+color.add_command(label ='Red', command = redcolor,activebackground='red',
+ activeforeground='cyan')
+color.add_command(label ='Green',command = greencolor,activebackground='green',
+ activeforeground='blue')
+color.add_command(label ='Blue',command = bluecolor,activebackground='blue',
+ activeforeground='yellow')
+color.add_command(label ='Yellow',command = yellowcolor,activebackground='yellow',
+ activeforeground='blue')
+color.add_command(label ='Cyan',command = cyancolor,activebackground='cyan',
+ activeforeground='red')
+color.add_command(label ='Violet',command = violetcolor,activebackground='violet',
+ activeforeground='green')
+color.add_separator()
+color.add_command(label ='Exit',command = root.destroy)
+root.config(menu = menubar)
+mainloop()

@@ -1,0 +1,118 @@
+import java.util.Scanner;
+class AgeOutOfBoundException extends Exception {
+    public AgeOutOfBoundException(String message) {
+        super(message);
+    }
+}
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter candidate's age: ");
+        try {
+            int age = scanner.nextInt();
+            checkEligibility(age);
+        } catch (AgeOutOfBoundException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter a valid age.");
+        } finally {
+            scanner.close();
+        }
+    }
+    private static void checkEligibility(int age) throws AgeOutOfBoundException {
+        final int VOTING_AGE = 18;
+        if (age < 0 || age > 120) {
+            throw new AgeOutOfBoundException("Age should be between 0 and 120");
+        }
+        if (age >= VOTING_AGE) {
+            System.out.println("Candidate is eligible for voting!");
+        } else {
+            System.out.println("Candidate is not eligible for voting.");
+        }
+    }
+}
+
+
+import java.applet.Applet;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+public class BouncingBallApplet extends Applet implements ActionListener {
+    private int x = 100;
+    private int y = 100;
+    private int xSpeed = 5;
+    private int ySpeed = 5;
+    private Color ballColor = Color.RED;
+    private Image offScreenImage;
+    private Graphics offScreenGraphics;
+    public void init() {
+        setBackground(Color.white);
+        javax.swing.Timer timer = new javax.swing.Timer(50, this);
+        timer.start();
+    }
+    public void paint(Graphics g) {
+        offScreenImage = createImage(getWidth(), getHeight());
+        offScreenGraphics = offScreenImage.getGraphics();
+        offScreenGraphics.setColor(getBackground());
+        offScreenGraphics.fillRect(0, 0, getWidth(), getHeight());
+        offScreenGraphics.setColor(ballColor);
+        offScreenGraphics.fillOval(x, y, 30, 30);
+        g.drawImage(offScreenImage, 0, 0, this);
+    }
+    public void actionPerformed(ActionEvent e) {
+        x += xSpeed;
+        y += ySpeed;
+        if (x <= 0 || x >= getWidth() - 30) {
+            xSpeed = -xSpeed;
+            changeBallColor();
+        }
+        if (y <= 0 || y >= getHeight() - 30) {
+            ySpeed = -ySpeed;
+            changeBallColor();
+        }
+        repaint();
+    }
+    private void changeBallColor() {
+        int red = (int) (Math.random() * 256);
+        int green = (int) (Math.random() * 256);
+        int blue = (int) (Math.random() * 256);
+        ballColor = new Color(red, green, blue);
+    }
+}
+
+
+import tkinter as tk
+from math import pi
+def calculate_volume():
+    radius = float(radius_entry.get())
+    volume = (4/3) * pi * (radius ** 3)
+    result_label.config(text=f"Volume: {volume:.2f}")
+app = tk.Tk()
+app.title("Sphere Volume Calculator")
+radius_label = tk.Label(app, text="Enter Radius:")
+radius_label.pack()
+radius_entry = tk.Entry(app)
+radius_entry.pack()
+calculate_button = tk.Button(app, text="Calculate", command=calculate_volume)
+calculate_button.pack()
+result_label = tk.Label(app, text="")
+result_label.pack()
+app.mainloop()
+
+
+n = int(input("Enter the number of key-value pairs: "))
+my_dict = {}
+for _ in range(n):
+    key = input("Enter a key: ")
+    value = input(f"Enter the value for {key}: ")
+    my_dict[key] = value
+sorted_dict_by_key_asc = dict(sorted(my_dict.items()))
+sorted_dict_by_key_desc = dict(sorted(my_dict.items(), reverse=True))
+sorted_dict_by_value_asc = dict(sorted(my_dict.items(), key=lambda item: item[1]))
+sorted_dict_by_value_desc = dict(sorted(my_dict.items(), key=lambda item: item[1], reverse=True))
+print("Sorted by key (ascending):", sorted_dict_by_key_asc)
+print("Sorted by key (descending):", sorted_dict_by_key_desc)
+print("Sorted by value (ascending):", sorted_dict_by_value_asc)
+print("Sorted by value (descending):", sorted_dict_by_value_desc)

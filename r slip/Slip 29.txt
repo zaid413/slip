@@ -1,0 +1,230 @@
+Q.1.A
+
+Write a java program to check whether given candidate is eligible for voting or not. Handle user defined as well as system definedException.    
+
+ 
+
+import java.util.InputMismatchException;
+
+import java.util.Scanner;
+
+ 
+
+class AgeBelow18Exception extends Exception {
+
+    public AgeBelow18Exception(String message) {
+
+        super(message);
+
+    }
+
+}
+
+ 
+
+public class VotingEligibility {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+ 
+
+        try {
+
+            System.out.print("Enter the candidate's age: ");
+
+            int age = scanner.nextInt();
+
+ 
+
+            if (age < 18) {
+
+                throw new AgeBelow18Exception("Candidate is not eligible for voting as age is below 18.");
+
+            } else {
+
+                System.out.println("Candidate is eligible for voting.");
+
+            }
+
+        } catch (AgeBelow18Exception e) {
+
+            System.err.println(e.getMessage());
+
+        } catch (InputMismatchException e) {
+
+            System.err.println("Invalid input. Please enter a valid age as a numeric value.");
+
+        }
+
+    }
+
+}
+
+Q.1.B
+
+Write a java program using Applet for bouncing ball. Ball should change its color for each bounce.
+
+import java.applet.*;
+
+import java.awt.*;
+
+ 
+
+public class BouncingBallApplet extends Applet implements Runnable {
+
+    private int x, y; // Current position of the ball
+
+    private int xSpeed, ySpeed; // Speed of the ball
+
+    private Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.ORANGE, Color.MAGENTA };
+
+    private int colorIndex = 0;
+
+ 
+
+    public void init() {
+
+        x = 100;
+
+        y = 100;
+
+        xSpeed = 3;
+
+        ySpeed = 2;
+
+    }
+
+ 
+
+    public void start() {
+
+        Thread t = new Thread(this);
+
+        t.start();
+
+    }
+
+ 
+
+    public void run() {
+
+        while (true) {
+
+            if (x < 0 || x > getWidth() - 20) {
+
+                xSpeed = -xSpeed; // Reverse direction when hitting the left or right edge
+
+                changeColor();
+
+            }
+
+            if (y < 0 || y > getHeight() - 20) {
+
+                ySpeed = -ySpeed; // Reverse direction when hitting the top or bottom edge
+
+                changeColor();
+
+            }
+
+            x += xSpeed;
+
+            y += ySpeed;
+
+            repaint();
+
+ 
+
+            try {
+
+                Thread.sleep(16); // Sleep for a short time to control animation speed
+
+            } catch (InterruptedException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+    }
+
+ 
+
+    private void changeColor() {
+
+        colorIndex = (colorIndex + 1) % colors.length;
+
+        setBackground(colors[colorIndex]);
+
+    }
+
+ 
+
+    public void paint(Graphics g) {
+
+        g.setColor(Color.WHITE);
+
+        g.fillRect(0, 0, getWidth(), getHeight());
+
+        g.setColor(colors[colorIndex]);
+
+        g.fillOval(x, y, 20, 20);
+
+    }
+
+}
+
+
+Q.2.A
+
+A) Write a Python GUI program to calculate volume of Sphere by accepting radius
+as input.
+import tkinter as tk
+from math import pi
+# Function to calculate the volume of a sphere
+def calculate_volume():
+ try:
+ radius = float(radius_entry.get())
+ volume = (4/3) * pi * (radius ** 3)
+ result_label.config(text=f"Volume: {volume:.2f}")
+ except ValueError:
+ result_label.config(text="Invalid input. Please enter a valid radius.")
+# Create the main application window
+app = tk.Tk()
+app.title("Sphere Volume Calculator")
+# Create and configure widgets
+radius_label = tk.Label(app, text="Enter Radius:")
+radius_label.pack()
+radius_entry = tk.Entry(app)
+radius_entry.pack()
+calculate_button = tk.Button(app, text="Calculate", command=calculate_volume)
+calculate_button.pack()
+result_label = tk.Label(app, text="")
+result_label.pack()
+# Start the application
+app.mainloop()
+
+
+Q.2.B
+
+
+B) Write a Python script to sort (ascending and descending) a dictionary by key
+and value.
+# Sample dictionary
+my_dict = {'apple': 3, 'banana': 1, 'cherry': 2, 'date': 4}
+# Sort the dictionary by keys in ascending order
+sorted_dict_by_key_asc = dict(sorted(my_dict.items()))
+# Sort the dictionary by keys in descending order
+sorted_dict_by_key_desc = dict(sorted(my_dict.items(), reverse=True))
+# Sort the dictionary by values in ascending order
+sorted_dict_by_value_asc = dict(sorted(my_dict.items(), key=lambda item: item[1]))
+# Sort the dictionary by values in descending order
+sorted_dict_by_value_desc = dict(sorted(my_dict.items(), key=lambda item: item[1],
+reverse=True))
+# Print the sorted dictionaries
+print("Sorted by key (ascending):", sorted_dict_by_key_asc)
+print("Sorted by key (descending):", sorted_dict_by_key_desc)
+print("Sorted by value (ascending):", sorted_dict_by_value_asc)
+print("Sorted by value (descending):", sorted_dict_by_value_desc)

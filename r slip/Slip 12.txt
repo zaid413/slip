@@ -1,0 +1,205 @@
+Q.1.A
+
+Write a java program to display each String in reverse order from a String array.
+
+ 
+
+import java.io.*;
+
+public class ReverseStringArray {
+
+    public static void main(String[] args) {
+
+        // Sample array of strings
+
+        String[] stringArray = {"Hello", "World"};
+
+ 
+
+        // Iterate through the array and reverse each string
+
+        for (String originalString : stringArray) {
+
+            String reversedString = new StringBuilder(originalString).reverse().toString();
+
+            System.out.println("Original: " + originalString + " Reversed: " + reversedString);
+
+        }
+
+    }
+
+}
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>javac ReverseStringArray.java
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>java ReverseStringArray
+
+Original: Hello Reversed: olleH
+
+Original: World Reversed: dlroW
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>
+
+
+Q.1.B
+
+Write a java program to display multiplication table of a given number into the List box by clicking on button.
+
+ 
+
+import javax.swing.*;
+
+import java.awt.*;
+
+import java.awt.event.ActionEvent;
+
+import java.awt.event.ActionListener;
+
+ 
+
+public class MultiplicationTableApp extends JFrame {
+
+    private JTextField numberField;
+
+    private JButton displayButton;
+
+    private JList<String> tableList;
+
+ 
+
+    public MultiplicationTableApp() {
+
+        setTitle("Multiplication Table");
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setSize(300, 400);
+
+ 
+
+        JPanel panel = new JPanel();
+
+        panel.setLayout(new GridLayout(3, 1));
+
+ 
+
+        numberField = new JTextField();
+
+        displayButton = new JButton("Display");
+
+        DefaultListModel<String> tableModel = new DefaultListModel<>();
+
+        tableList = new JList<>(tableModel);
+
+ 
+
+        displayButton.addActionListener(new ActionListener() {
+
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+
+                tableModel.clear();
+
+                String numberInput = numberField.getText();
+
+ 
+
+                try {
+
+                    int number = Integer.parseInt(numberInput);
+
+ 
+
+                    for (int i = 1; i <= 10; i++) {
+
+                        int result = number * i;
+
+                        tableModel.addElement(number + " x " + i + " = " + result);
+
+                    }
+
+                } catch (NumberFormatException ex) {
+
+                    tableModel.addElement("Invalid input. Please enter a valid number.");
+
+                }
+
+            }
+
+        });
+
+ 
+
+        panel.add(numberField);
+
+        panel.add(displayButton);
+
+        panel.add(new JScrollPane(tableList));
+
+ 
+
+        add(panel);
+
+    }
+
+ 
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(() -> {
+
+            MultiplicationTableApp app = new MultiplicationTableApp();
+
+            app.setVisible(true);
+
+        });
+
+    }
+
+}
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>javac MultiplicationTableApp.java
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>java MultiplicationTableApp
+
+
+Q.2.A
+
+A) Write a Python GUI program to create a label and change the label font style
+(font name, bold, size) using tkinter module.
+from tkinter import Label, Tk
+top=Tk()
+top.title="font style"
+label=Label(top,text="this is text with style",font=("Helvetica",25))
+label.pack()
+top.mainloop()
+
+
+Q.2.B
+
+
+B) Write a python program to count repeated characters in a string.
+Sample string: 'thequickbrownfoxjumpsoverthelazydog'
+Expected output: o-4, e-3, u-2, h-2, r-2, t-2
+import collections
+str1 = input('Enter a string : ')
+d = collections.defaultdict(int)
+for c in str1:
+ if c ==' ':
+ continue
+ d[c] += 1
+for c in sorted(d, key=d.get):
+ if d[c] > 1:
+ print('%s - %d' % (c, d[c]))
+

@@ -1,0 +1,59 @@
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+public class Slip19 {
+    public static void main(String[] args) {
+        Frame frame = new Frame("TYBBACA"); 
+        frame.setBackground(Color.RED);
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        frame.setSize(400, 300); 
+        frame.setVisible(true); 
+    }
+}
+
+
+import java.util.*;
+public class Slip19 {
+    public static void main(String[] args) {
+        List languages = new LinkedList();
+        languages.add("CPP");
+        languages.add("Java");
+        languages.add("Python");
+        languages.add("PHP");
+        System.out.println("Contents of the List using an Iterator:");
+        Iterator iterator = languages.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+        System.out.println("\nContents of the List in reverse order using a ListIterator:");
+        ListIterator listIterator = languages.listIterator(languages.size());
+        while (listIterator.hasPrevious()) {
+            System.out.println(listIterator.previous());
+        }
+    }
+}
+
+
+from math import pi
+class Circle:
+    def __init__(self, radius):
+        self.radius = radius
+    def area(self):
+        return round(pi * self.radius ** 2, 2)
+    def circumference(self):
+        return round(2 * pi * self.radius, 2)
+radius = float(input('Enter the radius of the circle: '))
+circle = Circle(radius)
+print('Area of circle is:', circle.area())
+print('Circumference of circle is:', circle.circumference())
+
+
+n=int(input("Input a number : "))
+d ={}
+for x in range(1,n+1):
+ d[x]=x*x
+print(d)

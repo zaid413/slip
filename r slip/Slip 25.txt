@@ -1,0 +1,240 @@
+Q.1.A
+
+Write a java program to check whether given string is palindrome or not
+
+import java.util.Scanner;
+
+ 
+
+public class PalindromeChecker {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+ 
+
+        System.out.print("Enter a string to check for palindrome: ");
+
+        String input = scanner.nextLine();
+
+ 
+
+        if (isPalindrome(input)) {
+
+            System.out.println("The entered string is a palindrome.");
+
+        } else {
+
+            System.out.println("The entered string is not a palindrome.");
+
+        }
+
+    }
+
+ 
+
+    public static boolean isPalindrome(String str) {
+
+        str = str.replaceAll("[^a-zA-Z0-9]", "").toLowerCase(); // Remove non-alphanumeric characters and convert to lowercase
+
+        int left = 0;
+
+        int right = str.length() - 1;
+
+ 
+
+        while (left < right) {
+
+            if (str.charAt(left) != str.charAt(right)) {
+
+                return false;
+
+            }
+
+            left++;
+
+            right--;
+
+        }
+
+ 
+
+        return true;
+
+    }
+
+}
+
+Q.1.B
+
+Create a package named Series having three different classes to print series:
+
+Fibonacci series
+
+Cube of numbers
+
+Square of numbers
+
+Write a java program to generate ‘n’ terms of the above series.
+
+ 
+
+Fibonacci.java
+
+package Series;
+
+public class Fibonacci {
+
+    public static void generateFibonacciSeries(int n) {
+
+        int a = 0, b = 1;
+
+        System.out.print("Fibonacci Series (" + n + " terms): ");
+
+        for (int i = 1; i <= n; i++) {
+
+            System.out.print(a + " ");
+
+            int sum = a + b;
+
+            a = b;
+
+            b = sum;
+
+        }
+
+    }
+
+}
+
+CubeOfNumbers.java
+
+package Series;
+
+ 
+
+public class CubeOfNumbers {
+
+    public static void generateCubeSeries(int n) {
+
+        System.out.print("Cube of Numbers (" + n + " terms): ");
+
+        for (int i = 1; i <= n; i++) {
+
+            int cube = i * i * i;
+
+            System.out.print(cube + " ");
+
+        }
+
+    }
+
+}
+
+SquareOfNumbers.java
+
+package Series;
+
+ 
+
+public class SquareOfNumbers {
+
+    public static void generateSquareSeries(int n) {
+
+        System.out.print("Square of Numbers (" + n + " terms): ");
+
+        for (int i = 1; i <= n; i++) {
+
+            int square = i * i;
+
+            System.out.print(square + " ");
+
+        }
+
+    }
+
+}
+
+SeriesMain.java
+
+import Series.*;
+
+ 
+
+public class SeriesMain {
+
+    public static void main(String[] args) {
+
+        int n = 10; // Number of terms
+
+ 
+
+        Fibonacci.generateFibonacciSeries(n);
+
+        System.out.println();
+
+ 
+
+        CubeOfNumbers.generateCubeSeries(n);
+
+        System.out.println();
+
+ 
+
+        SquareOfNumbers.generateSquareSeries(n);
+
+        System.out.println();
+
+    }
+
+}
+
+
+Q.2.A
+
+A) Write a Python function that accepts a string and calculate the number of
+upper case letters and lower case letters.
+Sample String : 'The quick Brow Fox'
+Expected Output :
+No. of Upper case characters : 3
+No. of Lower case Characters : 12
+string=input('enter a string : ')
+up=low=ele=0
+for x in string:
+ if x.isupper():
+ up+=1
+ elif x.islower():
+ low+=1
+ else:
+ ele+=1
+print('No. of Upper case characters : ',up)
+print('No. of Lower case characters : ',low)
+print('other special symbols',ele)
+
+
+Q.2.B
+
+
+
+B) Write a Python script to Create a Class which Performs Basic Calculator
+Operations.
+class Calculator:
+ def __init__(self):
+ pass
+ def add(self, num1, num2):
+ return num1 + num2
+ def subtract(self, num1, num2):
+ return num1 - num2
+ def multiply(self, num1, num2):
+ return num1 * num2
+ def divide(self, num1, num2):
+ if num2 == 0:
+ return "Cannot divide by zero"
+ return num1 / num2
+calc = Calculator()
+print("Addition:", calc.add(5, 3)) # 8
+print("Subtraction:", calc.subtract(5, 3)) # 2
+print("Multiplication:", calc.multiply(5, 3)) # 15
+print("Division:", calc.divide(10, 2)) # 5.0
+print("Division by zero:", calc.divide(10, 0)) # "Cannot divide by zero"

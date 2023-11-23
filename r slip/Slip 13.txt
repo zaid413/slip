@@ -1,0 +1,151 @@
+Q.1.A
+
+Write a java program to accept ‘n’ integers from the user & store them in an ArrayList collection. Display the elements of ArrayList collection in reverse order.
+
+import java.io.*;
+
+import java.util.ArrayList;
+
+import java.util.Scanner;
+
+ 
+
+public class ReverseArrayList {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        ArrayList<Integer> numberList = new ArrayList<Integer>();
+
+ 
+
+        System.out.print("Enter the number of integers (n): ");
+
+        int n = scanner.nextInt();
+
+ 
+
+        System.out.println("Enter " + n + " integers:");
+
+ 
+
+        for (int i = 0; i < n; i++) {
+
+            int num = scanner.nextInt();
+
+            numberList.add(num);
+
+        }
+
+ 
+
+        System.out.println("Elements in reverse order:");
+
+ 
+
+        for (int i = numberList.size() - 1; i >= 0; i--) {
+
+            System.out.println(numberList.get(i));
+
+        }
+
+ 
+
+        scanner.close();
+
+    }
+
+}
+
+
+Q.1.B
+
+Write a java program that asks the user name, and then greets the user by name. Before outputting the user's name, convert it to upper case letters. For example, if the user's name is Raj, then the program should respond "Hello, RAJ, nice to meet you!".
+
+ 
+
+import java.util.Scanner;
+
+import java.io.*;
+
+public class GreetUser {
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+ 
+
+        System.out.print("Enter your name: ");
+
+        String userName = scanner.nextLine();
+
+ 
+
+        // Convert the user's name to uppercase
+
+        String upperCaseName = userName.toUpperCase();
+
+ 
+
+        System.out.println("Hello, " + upperCaseName + ", nice to meet you!");
+
+ 
+
+        scanner.close();
+
+    }
+
+}
+
+ 
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>javac GreetUser.java
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>java GreetUser
+
+Enter your name: Raj
+
+Hello, RAJ, nice to meet you!
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>
+
+
+
+Q.2.A
+
+A) Write a Python program to input a positive integer. Display correct message
+for correct and incorrect input. (Use Exception Handling)
+try:
+ num=int(input('Enter a number :'))
+except ValueError:
+ print("\nThis is not a number!")
+else:
+ print('\nnumber is : ',num)
+
+Q.2.B 
+
+
+B) Write a program to implement the concept of queue using list.
+q=[]
+q.append(10)
+print("Initial Queue is:",q)
+q.append(100)
+print("Initial Queue is:",q)
+q.append(1000)
+print("Initial Queue is:",q)
+q.append(10000)
+print("Initial Queue is:",q)
+print('{} is out from queue ! '.format(q.pop(0)))
+print("After Removing elements:",q)
+print('{} is out from queue ! '.format(q.pop(0)))
+print("After Removing elements:",q)
+print('{} is out from queue ! '.format(q.pop(0)))
+print("After Removing elements:",q)

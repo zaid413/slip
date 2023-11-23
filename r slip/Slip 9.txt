@@ -1,0 +1,206 @@
+Q.1.A
+
+Write a java Program to display following Pattern:
+
+1
+
+0 1
+
+0 1 0
+
+1 0 1 0
+
+public class PatternDisplay {
+
+    public static void main(String[] args) {
+
+        int n = 4; // Number of rows in the pattern
+
+         for (int i = 0; i < n; i++) {
+
+            int numToPrint = (i % 2 == 0) ? 1 : 0;
+
+            for (int j = 0; j <= i; j++) {
+
+                System.out.print(numToPrint + " ");
+
+                numToPrint = 1 - numToPrint;
+
+            }
+
+            System.out.println();
+
+        }
+
+    }
+
+}
+
+ Output:-
+
+C:\Program Files\Java\jdk-11.0.17\bin>javac PatternDisplay.java
+
+C:\Program Files\Java\jdk-11.0.17\bin>java PatternDisplay
+
+1
+
+0 1
+
+1 0 1
+
+0 1 0 1
+
+ 
+
+C:\Program Files\Java\jdk-11.0.17\bin>
+
+
+
+Q.1.B
+
+Write a java program to validate PAN number and Mobile Number. If it is invalid then throw user defined Exception “Invalid Data”, otherwise display it.
+
+class InvalidDataException extends Exception {
+
+    public InvalidDataException(String message) {
+
+        super(message);
+
+    }
+
+}
+
+public class DataValidator {
+
+    public static void main(String[] args) {
+
+        try {
+
+            String panNumber = "ABC12"; // Replace with the PAN number to validate
+
+            String mobileNumber = "1234567890"; // Replace with the mobile number to validate
+
+ 
+
+            validatePAN(panNumber);
+
+            validateMobileNumber(mobileNumber);
+
+ 
+
+            System.out.println("Valid PAN Number: " + panNumber);
+
+            System.out.println("Valid Mobile Number: " + mobileNumber);
+
+        } catch (InvalidDataException e) {
+
+            System.out.println("Error: " + e.getMessage());
+
+        }
+
+    }
+
+ 
+
+    public static void validatePAN(String pan) throws InvalidDataException {
+
+        if (pan.matches("[A-Z]{5}[0-9]{4}[A-Z]{1}")) {
+
+            // PAN is valid
+
+        } else {
+
+            throw new InvalidDataException("Invalid PAN Number");
+
+        }
+
+    }
+
+ 
+
+    public static void validateMobileNumber(String mobileNumber) throws InvalidDataException {
+
+        if (mobileNumber.matches("[0-9]{10}")) {
+
+            // Mobile number is valid
+
+        } else {
+
+            throw new InvalidDataException("Invalid Mobile Number");
+
+        }
+
+    }
+
+}
+
+
+Q.2.A
+
+A) Write a Python script using class to reverse a string word by word.
+def reverse_words(s):
+ return ' '.join(reversed(s.split()))
+str1=input('Enter a string : ')
+print(reverse_words(str1))
+
+
+Q.2.B
+
+
+B) Write Python GUI program to accept a number n and check whether it is
+Prime, Perfect or Armstrong number or not. Specify three radio buttons.
+import tkinter as tk
+from tkinter import messagebox
+def is_prime(num):
+ if num < 2:
+ return False
+ for i in range(2, int(num ** 0.5) + 1):
+ if num % i == 0:
+ return False
+ return True
+def is_perfect(num):
+ if num < 2:
+ return False
+ divisors = [1]
+ for i in range(2, num):
+ if num % i == 0:
+ divisors.append(i)
+ return sum(divisors) == num
+def is_armstrong(num):
+ num_str = str(num)
+ num_digits = len(num_str)
+ armstrong_sum = sum(int(digit) ** num_digits for digit in num_str)
+ return armstrong_sum == num
+def check_number():
+ num = int(entry.get())
+ result = ""
+
+ if is_prime(num):
+ result += "Prime, "
+ if is_perfect(num):
+ result += "Perfect, "
+ if is_armstrong(num):
+ result += "Armstrong, "
+
+ if not result:
+ result = "Not Prime, Perfect, or Armstrong"
+ else:
+ result = result[:-2] # Remove the trailing comma and space
+
+ messagebox.showinfo("Result", f"{num} is {result}")
+# Create the main window
+root = tk.Tk()
+root.title("Number Checker")
+# Create and place the radio buttons
+label = tk.Label(root, text="Enter a number:")
+label.pack()
+entry = tk.Entry(root)
+entry.pack()
+button = tk.Button(root, text="Check", command=check_number)
+button.pack()
+# Start the GUI event loop
+root.mainloop()
+
+
+
+

@@ -1,0 +1,236 @@
+Q.1.A
+
+Write a java program to accept a number from user, If it is greater than 1000 then throw user defined exception “Number is out of Range” otherwise display the factors of that number. (Use static keyword)   
+
+ 
+
+class NumberOutOfRangeException extends Exception {
+
+    public NumberOutOfRangeException(String message) {
+
+        super(message);
+
+    }
+
+}
+
+ 
+
+public class FactorsCalculator {
+
+    public static void main(String[] args) {
+
+        try {
+
+            int number = 1200; // Replace with the number you want to check
+
+ 
+
+            if (number > 1000) {
+
+                throw new NumberOutOfRangeException("Number is out of Range");
+
+            } else {
+
+                System.out.println("Factors of " + number + ":");
+
+                displayFactors(number);
+
+            }
+
+        } catch (NumberOutOfRangeException e) {
+
+            System.err.println(e.getMessage());
+
+        }
+
+    }
+
+ 
+
+    public static void displayFactors(int number) {
+
+        for (int i = 1; i <= number; i++) {
+
+            if (number % i == 0) {
+
+                System.out.println(i);
+
+            }
+
+        }
+
+    }
+
+}
+
+Q.1.B
+
+Write a java program to accept directory name in TextField and display list of files and subdirectories in List Control from that directory by clicking on Button.
+
+import javax.swing.*;
+
+import java.awt.event.ActionEvent;
+
+import java.awt.event.ActionListener;
+
+import java.io.File;
+
+ 
+
+public class DirectoryLister extends JFrame {
+
+    private JTextField directoryField;
+
+    private JButton listButton;
+
+    private JList<String> fileList;
+
+ 
+
+    public DirectoryLister() {
+
+        setTitle("Directory Lister");
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setSize(400, 400);
+
+ 
+
+        directoryField = new JTextField();
+
+        listButton = new JButton("List Directory");
+
+        fileList = new JList<>();
+
+ 
+
+        listButton.addActionListener(new ActionListener() {
+
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+
+                listDirectoryContents();
+
+            }
+
+        });
+
+ 
+
+        JPanel panel = new JPanel();
+
+        panel.add(new JLabel("Directory: "));
+
+        panel.add(directoryField);
+
+        panel.add(listButton);
+
+ 
+
+        JScrollPane scrollPane = new JScrollPane(fileList);
+
+ 
+
+        add(panel, "North");
+
+        add(scrollPane, "Center");
+
+    }
+
+ 
+
+    private void listDirectoryContents() {
+
+        String directoryPath = directoryField.getText();
+
+        File directory = new File(directoryPath);
+
+ 
+
+        if (directory.exists() && directory.isDirectory()) {
+
+            String[] contents = directory.list();
+
+            fileList.setListData(contents);
+
+        } else {
+
+            fileList.setListData(new String[] { "Directory not found." });
+
+        }
+
+    }
+
+ 
+
+    public static void main(String[] args) {
+
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+
+                DirectoryLister directoryLister = new DirectoryLister();
+
+                directoryLister.setVisible(true);
+
+            }
+
+        });
+
+    }
+
+}
+
+
+Q.2.A
+
+A) Write a Python program to unzip a list of tuples into individual lists.
+# Sample list of tuples
+data = [(1, 'apple'), (2, 'banana'), (3, 'cherry')]
+# Unzip the list of tuples into individual lists
+numbers, fruits = zip(*data)
+# Print the individual lists
+print("Numbers:", numbers)
+print("Fruits:", fruits)
+
+
+Q.2.B
+
+
+B) Write Python GUI program to accept a decimal number and convert and
+display it to binary, octal and hexadecimal number.
+import tkinter as tk
+def convert_numbers():
+ decimal_value = entry.get()
+ try:
+ decimal_value = int(decimal_value)
+ binary_label.config(text=f"Binary: {bin(decimal_value)[2:]}")
+ octal_label.config(text=f"Octal: {oct(decimal_value)[2:]}")
+ hexadecimal_label.config(text=f"Hexadecimal: {hex(decimal_value)[2:]}")
+ except ValueError:
+ binary_label.config(text="Invalid Input")
+ octal_label.config(text="Invalid Input")
+ hexadecimal_label.config(text="Invalid Input")
+# Create the main window
+window = tk.Tk()
+window.title("Number Converter")
+# Create a label and an entry for decimal input
+decimal_label = tk.Label(window, text="Enter a decimal number:")
+decimal_label.pack()
+entry = tk.Entry(window)
+entry.pack()
+# Create a button to trigger the conversion
+convert_button = tk.Button(window, text="Convert", command=convert_numbers)
+convert_button.pack()
+# Create labels to display the converted numbers
+binary_label = tk.Label(window, text="Binary:")
+binary_label.pack()
+octal_label = tk.Label(window, text="Octal:")
+octal_label.pack()
+hexadecimal_label = tk.Label(window, text="Hexadecimal:")
+hexadecimal_label.pack()
+# Start the GUI main loop
+window.mainloop()

@@ -1,0 +1,93 @@
+import java.util.Scanner;
+public class Slip19 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a number: ");
+        int number = scanner.nextInt();
+        scanner.close();
+        int sum = calculateSumOfDigits(number);
+        System.out.println("Sum of digits: " + sum);
+    }
+    public static int calculateSumOfDigits(int number) {
+        if (number == 0) {
+            return 0;
+        } else {
+            return number % 10 + calculateSumOfDigits(number / 10);
+        }
+    }
+}
+
+
+import java.util.Scanner;
+public class Slip19 {
+    String name;
+    static int n;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter the number of employees: ");
+        n = sc.nextInt();
+        Slip19[] emp = new Slip19[n];
+        for (int i = 0; i < n; i++) {
+            emp[i] = new Slip19();
+            System.out.print("Enter the name of employee " + (i + 1) + ": ");
+            emp[i].name = sc.next();
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (emp[i].name.compareTo(emp[j].name) > 0) {
+                    Slip19 temp = emp[i];
+                    emp[i] = emp[j];
+                    emp[j] = temp;
+                }
+            }
+        }
+        System.out.println("The sorted list of employee names is:");
+        for (int i = 0; i < n; i++) {
+            System.out.println(emp[i].name);
+        }
+    }
+}
+
+
+class Ractangle():
+ def __init__(self,l,w):
+     self.l=l
+     self.w=w
+ def rectangle_area(self):
+     return self.l*self.w
+ def rectangle_Perimeter(self):
+     return (self.l*2)+(self.w*2)
+L=int(input('enter Length of Rectangle :'))
+W=int(input('enter Width of Rectangle :'))
+a1=Ractangle(L,W)
+print("Area=",a1.rectangle_area())
+print("Perimeter",a1.rectangle_Perimeter())
+
+
+import tkinter as tk
+def add_item():
+    item = entry.get()
+    if item:
+        listbox.insert(tk.END, item)
+        entry.delete(0, tk.END)  # Clear the entry field
+def print_items():
+    selected_items = listbox.curselection()
+    for index in selected_items:
+        print(listbox.get(index))
+def delete_items():
+    selected_items = listbox.curselection()
+    for index in selected_items:
+        listbox.delete(index)
+root = tk.Tk()
+root.title("Listbox Example")
+listbox = tk.Listbox(root, selectmode=tk.MULTIPLE)
+listbox.pack()
+entry = tk.Entry(root)
+entry.pack()
+add_button = tk.Button(root, text="Add", command=add_item)
+print_button = tk.Button(root, text="Print", command=print_items)
+delete_button = tk.Button(root, text="Delete", command=delete_items)
+add_button.pack()
+print_button.pack()
+delete_button.pack()
+root.mainloop()
