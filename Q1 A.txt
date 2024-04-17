@@ -1,0 +1,300 @@
+Write a java program to accept a String from user and display each vowel from a
+String after 3 seconds.
+
+
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
+        scanner.close();
+        for (int i = 0; i < input.length(); i++) {
+            char ch = input.charAt(i);
+            if ("AEIOUaeiou".contains(String.valueOf(ch))) {
+                System.out.println("Vowel: " + ch);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
+
+OR
+
+import java.util.Scanner;
+
+public class VowelDisplay {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Accept a string from the user
+        System.out.print("Enter a string: ");
+        String inputString = scanner.nextLine();
+
+        // Iterate through each character of the string
+        for (int i = 0; i < inputString.length(); i++) {
+            char ch = inputString.charAt(i);
+
+            // Check if the character is a vowel
+            if (isVowel(ch)) {
+                // Display the vowel after 3 seconds
+                try {
+                    Thread.sleep(3000); // Wait for 3 seconds
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(ch);
+            }
+        }
+
+        scanner.close();
+    }
+
+    // Method to check if a character is a vowel
+    public static boolean isVowel(char ch) {
+        ch = Character.toLowerCase(ch); // Convert to lowercase for case-insensitivity
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+}
+
+
+To run this program in JCreator:
+Open JCreator and create a new Java project.
+Create a new Java class file and name it VowelDisplay.
+Copy the above code into this class file.
+Save the file and then compile and run the program.
+
+--------------------------------------------------------------------------------------------------------------------------------------
+Write a Java program to check whether given file is present on server or not, if it is
+ there then display its contents on client’s terminal otherwise display the message “File
+ Not Found”.
+
+create the file save as ServerFile.java on Desktop then open cmd & compile this file with "javac ServerFile.java" then after creating the client file compile & run "java ServerFile.java".
+
+ServerFile.java
+
+import java.io.*;
+import java.net.*;
+class ServerFile {
+    public static void main(String args[]) throws IOException {
+        try {
+            ServerSocket server = new ServerSocket(7777);
+            Socket s = server.accept();
+            DataInputStream dis = new DataInputStream(s.getInputStream());
+            DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+            String sfilename = dis.readUTF();
+            File file = new File(sfilename);
+            if (file.exists()) {
+                FileInputStream fin = new FileInputStream(sfilename);
+                int ch;
+                String fileinfo = "";
+                while ((ch = fin.read()) != -1) {
+                    fileinfo = fileinfo + (char)ch;
+                }
+                System.out.println(fileinfo);
+                dos.writeUTF(fileinfo);
+            } else {
+                dos.writeUTF("0");
+            }
+            server.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+create the file save as ClientFile.java on Desktop then open cmd & compile this file with command "javac ClientFile.java" then run serverfile first then run client file with command "java ClientFile.java".
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+public class ClientFile {
+    static Scanner sc = new Scanner(System.in);
+    public static void main(String args[]) throws IOException {
+        try {
+            Socket client = new Socket("localhost", 7777);
+            DataInputStream dis = new DataInputStream(client.getInputStream());
+            DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+            System.out.println("Please enter a file name:");
+            String cfilename = sc.next();
+            dos.writeUTF(cfilename);
+            String msg = dis.readUTF();
+            if (msg.equalsIgnoreCase("0"))
+                System.out.println("File does not exist.");
+            else
+                System.out.println(msg);
+            client.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+--------------------------------------------------------------------------------------------------------------------------------------
+Create an Android Application to Construct image switcher using setFactory()
+
+create MainActivity.xml file & paste below code.
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <ImageSwitcher
+        android:id="@+id/imgsw"
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:layout_margin="20dp">
+    </ImageSwitcher>
+    <Button
+        android:id="@+id/prev"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="prev"
+        android:layout_below="@id/imgsw"
+        >
+    </Button>
+    <Button
+        android:id="@+id/next"
+        android:layout_below="@id/imgsw"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="next">
+    </Button>
+</RelativeLayout>
+
+create another file MainActivity.java ext and paste below code
+
+package com.app.myapplication;
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
+import android.widget.ViewSwitcher;
+public class MainActivity extends AppCompatActivity {
+    Integer[] images={R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_foreground,R.drawable.ic_launcher_background};
+    int i=0;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Button next=findViewById(R.id.next);
+        Button prev=findViewById(R.id.prev);
+        ImageSwitcher imgsw=findViewById(R.id.imgsw);
+        imgsw.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView imageView=new ImageView(getApplicationContext());
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                return imageView;
+            }
+        });
+        Animation out= AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
+        Animation in= AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
+        imgsw.setOutAnimation(out);
+        imgsw.setInAnimation(in);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (i < images.length - 1) {
+                    i++;
+                    imgsw.setImageResource(images[i]);
+                } else {
+                    i = 0;
+                    imgsw.setImageResource(images[i]);
+                }
+            }
+        });
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (i > 0) {
+                    i--;
+                    imgsw.setImageResource(images[i]);
+                } else {
+                    i = images.length - 1;
+                    imgsw.setImageResource(images[i]);
+                }
+            }
+        });
+
+    }
+}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Create an Android Application that Demonstrate ContextMenu.
+
+create MainActivity.xml file & paste below code.
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Long press for context menu"
+        android:textSize="24sp"
+        android:padding="16dp"/>
+</RelativeLayout>
+
+create another file MainActivity.java ext and paste below code
+
+package com.app.myapplication;
+import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+public class MainActivity extends AppCompatActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        View view = findViewById(R.id.textView);
+        registerForContextMenu(view);
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 0, "Item1");
+        menu.add(0, v.getId(), 0, "Item2");
+        menu.add(0, v.getId(), 0, "Item3");
+        menu.add(0, v.getId(), 0, "Switch");
+        menu.add(0, v.getId(), 0, "Search");
+    }
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        if (item.getTitle().equals("Item1")) {
+            showToast("Item1");
+        } else if (item.getTitle().equals("Item2")) {
+            showToast("Item2");
+        } else if (item.getTitle().equals("Item3")) {
+            showToast("Item3");
+        } else if (item.getTitle().equals("Switch")) {
+            showToast("Switch");
+        } else if (item.getTitle().equals("Search")) {
+            showToast("Search");
+        }
+        return true;
+    }
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+}
