@@ -1,0 +1,154 @@
+
+Virtual Hosting Setup (Name Based) using Apache on Fedora
+
+Virtual Hosting is a method to host multiple domains from a single server.
+There are two types of Virtual Hosting,
+Name Based - Multiple domains are hosted with a single IP Address from the server
+IP Based - Multiple domains are hosted from multiple IP Addresses (NIC) from the server
+
+#Packages needed
+#httpd - The Apache Server package
+#mod_ssl - SSL/TLS module for Apache Server, it provides the Secure Socket Layer & Transport Layer Security to Apache Server
+
+#Services
+httpd.service
+
+#Directories/Files to remember
+/etc/httpd/conf/httpd.conf - The main configuration file of Apache, it is the global server config file, do not alter unnecessarily 
+/etc/httpd/conf.d/ - Directory to save additional config file, used for Virtual Hosting 
+/var/www/html/ - Default location for single-site hosting when no configuration is done on the server. Used in simple single website setups where no virtual hosts are needed.
+/var/www/ - Parent directory for all web content. Used when hosting multiple websites.
+
+#Check the details of the packages, below command shows the availability as well as all the details of the packages
+dnf info httpd
+dnf info mod_ssl
+
+#Install both the Packages
+dnf install httpd* mod_ssl
+#* for all the packages listed with name httpd
+
+#Start the httpd service
+systemctl start httpd
+
+#Enable the httpd service
+systemctl enable httpd
+
+#Check the status of the httpd service
+#httpd.service should be enabled & should be active (running)
+systemctl status httpd
+
+#Create the Directories for Virtual Hosting
+mkdir -p /var/www/website1_name/public_html
+mkdir -p /var/www/website2_name/public_html
+
+#Give Permission to Website Directories
+chmod 755 -R /var/www/website1_name
+chmod 755 -R /var/www/website2_name
+-R means recursive, means it the permission will be applied to the child dir/files as well
+
+#Give Ownership to Apache service of the Directories
+chown -R apache:apache /var/www/website1_name
+chown -R apache:apache /var/www/website2_name
+#Applying ownership to apache:apache means assigning the Apache user and Apache group as the owners of the specified files or directories.
+#It ensures that the Apache Web Server process has proper access to the files it needs to serve.
+#Again -R means recursive, means it the ownership will be applied to the child dir/files as well
+
+#Webpage file creation in system
+#index file is not created already, manually create the webpage
+
+vim /var/www/website1_name/public_htmlindex.html
+"Welcome to website1"
+
+vim /var/www/website2_name/public_html/index.html
+"Welcome to website2"
+
+#configure virtual hosts
+vim /etc/httpd/conf.d/website1_name.conf
+
+<VirtualHost *.80>
+        ServerAdmin admin@website1_name.com
+        ServerName website1_name.com
+        ServerAlias www.website1_name.com
+        DocumentRoot /var/www/website1_name/public_html
+	ErrorLog logs/www.website1_name.com-error_log
+	CustomLog logs/www.website2_name.com-access_log common
+</VirtualHost>
+
+vim /etc/httpd/conf.d/website2_name.conf
+
+<VirtualHost *.80>
+        ServerAdmin admin@website2_name.com
+        ServerName website2_name.com
+        ServerAlias www.website2_name.com
+        DocumentRoot /var/www/website2_name/public_html
+	ErrorLog logs/www.website2_name.com-error_log
+	CustomLog logs/www.website2_name.com-access_log common
+</VirtualHost>
+
+#For local testing update the hosts file
+
+#Why Do We Update /etc/hosts?
+#The /etc/hosts file is used to map hostnames (like website1_name.com or website2_name.com) to IP addresses on our local machine.
+#When we type http://website_name1.com in the browser
+#Normally, the computer queries a DNS server to resolve website_name1.com to an IP address
+#For local testing, we bypass DNS and use the /etc/hosts file to tell the computer that website_name1.com should resolve to the IP address 127.0.0.1 (the local loopback address)
+#This ensures the browser reaches our local Apache server instead of searching the internet
+
+vim /etc/hosts
+
+127.0.0.1 www.website1_name.com
+127.0.0.1 www.website2_name.com
+127.0.0.1 website1_name.com
+127.0.0.1 website2_name.com
+
+#Check the Syntax of httpd conf file
+#Output should say Syntax OK
+httpd -t
+
+#Restart & enable the httpd service
+systemctl restart httpd
+systemctl enable httpd
+
+#Optional, if selinux is enforced then, we need to provide the http context to the web content directory.
+#Check the default context of the web content directory
+
+ls -Z /var/www/website1_name/public_html
+output - unconfined_u:object_r:default_t:s0 /var/www/website1_name/public_html
+
+#Apply the http context to the Web Content file
+semanage fcontext -a -t httpd_sys_content_t "/var/www/website1_name/public_html(/.*)?"
+semanage fcontext -a -t httpd_sys_content_t "/var/www/website2_name/public_html(/.*)?"
+-a for adding new context rule
+-t for defining context type
+httpd_sys_content_t for Apache's static content
+
+#Apply the http context to the sub directories as well
+restorecon -R /var/www/website1_name/public_html
+restorecon -R /var/www/website2_name/public_html
+-R means recursive, means it the permission will be applied to the child dir/files as well
+
+#Optional, if the firewall is active then allow http & https
+
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+firewall-cmd --reload
+
+#Now access the browser & access the website
+
+www.website1_name.com
+www.website2_name.com
+website1_name.com
+website2_name.com
+
+Logic to understand
+
+1. Apache takes the web content from /var/www directory.
+2. A global configuration file is already present in the system but, custom conf file can be created in /etc/httpd/conf.d for virtual hosting.
+3. Directory Name in directory /var/www/html or /var/www/ are independent from the website servername, means there is no rule to keep the directory names as per the website.
+4. Config File Name in directory /etc/httpd/conf.d are independent from the website servername, means there is no rule to keep the file name as per the website.
+5. Multiple Virtual Hosting configuration can be saved in one conf file, with appropriate Include statement {<> </>}.
+6. Exact path is needed to be mentioned for the DocumentRoot in the conf file for the webpage to be successfully running. Otherwise it will show the Apache test page.
+7. There can be multiple Server Alias for a particular website but each alias name should be entered in the /etc/hosts file (for local testing).
+8. If SElinux is Enforced then, context of the web content is need to be updated via chcon or semanage command.
+9. Semanage command is used to manage SELinux policy settings, including file contexts. Specifically, it allows to define the appropriate context for files and directories that are not covered by the default policies. Without updating the context of the file Apache cannot serve properly as SElinux policies will tangle.
+10. If the firewall is active then http & https services are needed to be allowed through it.
