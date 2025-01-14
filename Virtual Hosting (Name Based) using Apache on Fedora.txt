@@ -1,60 +1,60 @@
 
-Virtual Hosting Setup (Name Based) using Apache on Fedora
+# Virtual Hosting Setup (Name Based) using Apache on Fedora
 
-Virtual Hosting is a method to host multiple domains from a single server.
-There are two types of Virtual Hosting,
-Name Based - Multiple domains are hosted with a single IP Address from the server
-IP Based - Multiple domains are hosted from multiple IP Addresses (NIC) from the server
+# Virtual Hosting is a method to host multiple domains from a single server.
+# There are two types of Virtual Hosting,
+# Name Based - Multiple domains are hosted with a single IP Address from the server
+# IP Based - Multiple domains are hosted from multiple IP Addresses (NIC) from the server
 
-#Packages needed
-#httpd - The Apache Server package
-#mod_ssl - SSL/TLS module for Apache Server, it provides the Secure Socket Layer & Transport Layer Security to Apache Server
+# Packages needed
+httpd - The Apache Server package
+mod_ssl - SSL/TLS module for Apache Server, it provides the Secure Socket Layer & Transport Layer Security to Apache Server
 
-#Services
+# Services
 httpd.service
 
-#Directories/Files to remember
+# Directories/Files to remember
 /etc/httpd/conf/httpd.conf - The main configuration file of Apache, it is the global server config file, do not alter unnecessarily 
 /etc/httpd/conf.d/ - Directory to save additional config file, used for Virtual Hosting 
 /var/www/html/ - Default location for single-site hosting when no configuration is done on the server. Used in simple single website setups where no virtual hosts are needed.
 /var/www/ - Parent directory for all web content. Used when hosting multiple websites.
 
-#Check the details of the packages, below command shows the availability as well as all the details of the packages
+# Check the details of the packages, below command shows the availability as well as all the details of the packages
 dnf info httpd
 dnf info mod_ssl
 
-#Install both the Packages
+# Install both the Packages
 dnf install httpd* mod_ssl
-#* for all the packages listed with name httpd
+# * for all the packages listed with name httpd
 
-#Start the httpd service
-systemctl start httpd
+# Start the httpd service
+systemctl start httpd.service
 
-#Enable the httpd service
-systemctl enable httpd
+# Enable the httpd service
+systemctl enable httpd.service
 
-#Check the status of the httpd service
-#httpd.service should be enabled & should be active (running)
-systemctl status httpd
+# Check the status of the httpd service
+# httpd.service should be enabled & should be active (running)
+systemctl status httpd.service
 
-#Create the Directories for Virtual Hosting
+# Create the Directories for Virtual Hosting
 mkdir -p /var/www/website1_name/public_html
 mkdir -p /var/www/website2_name/public_html
 
-#Give Permission to Website Directories
+# Give Permission to Website Directories
 chmod 755 -R /var/www/website1_name
 chmod 755 -R /var/www/website2_name
--R means recursive, means it the permission will be applied to the child dir/files as well
+# -R means recursive, means it the permission will be applied to the child dir/files as well
 
-#Give Ownership to Apache service of the Directories
+# Give Ownership to Apache service of the Directories
 chown -R apache:apache /var/www/website1_name
 chown -R apache:apache /var/www/website2_name
-#Applying ownership to apache:apache means assigning the Apache user and Apache group as the owners of the specified files or directories.
-#It ensures that the Apache Web Server process has proper access to the files it needs to serve.
-#Again -R means recursive, means it the ownership will be applied to the child dir/files as well
+# Applying ownership to apache:apache means assigning the Apache user and Apache group as the owners of the specified files or directories.
+# It ensures that the Apache Web Server process has proper access to the files it needs to serve.
+# Again -R means recursive, means it the ownership will be applied to the child dir/files as well
 
-#Webpage file creation in system
-#index file is not created already, manually create the webpage
+# Webpage file creation in system
+# index file is not created already, manually create the webpage
 
 vim /var/www/website1_name/public_htmlindex.html
 "Welcome to website1"
@@ -62,7 +62,9 @@ vim /var/www/website1_name/public_htmlindex.html
 vim /var/www/website2_name/public_html/index.html
 "Welcome to website2"
 
-#configure virtual hosts
+# Configure virtual hosts for both the Websites
+
+# Virtual host for first Website
 vim /etc/httpd/conf.d/website1_name.conf
 
 <VirtualHost *.80>
@@ -74,6 +76,7 @@ vim /etc/httpd/conf.d/website1_name.conf
 	CustomLog logs/www.website2_name.com-access_log common
 </VirtualHost>
 
+# Virtual host for second Website
 vim /etc/httpd/conf.d/website2_name.conf
 
 <VirtualHost *.80>
@@ -85,14 +88,14 @@ vim /etc/httpd/conf.d/website2_name.conf
 	CustomLog logs/www.website2_name.com-access_log common
 </VirtualHost>
 
-#For local testing update the hosts file
+# For local testing update the hosts file
 
-#Why Do We Update /etc/hosts?
-#The /etc/hosts file is used to map hostnames (like website1_name.com or website2_name.com) to IP addresses on our local machine.
-#When we type http://website_name1.com in the browser
-#Normally, the computer queries a DNS server to resolve website_name1.com to an IP address
-#For local testing, we bypass DNS and use the /etc/hosts file to tell the computer that website_name1.com should resolve to the IP address 127.0.0.1 (the local loopback address)
-#This ensures the browser reaches our local Apache server instead of searching the internet
+# Why Do We Update /etc/hosts?
+# The /etc/hosts file is used to map hostnames (like website1_name.com or website2_name.com) to IP addresses on our local machine.
+# When we type http://website_name1.com in the browser
+# Normally, the computer queries a DNS server to resolve website_name1.com to an IP address
+# For local testing, we bypass DNS and use the /etc/hosts file to tell the computer that website_name1.com should resolve to the IP address 127.0.0.1 (the local loopback address)
+# This ensures the browser reaches our local Apache server instead of searching the internet
 
 vim /etc/hosts
 
@@ -101,46 +104,43 @@ vim /etc/hosts
 127.0.0.1 website1_name.com
 127.0.0.1 website2_name.com
 
-#Check the Syntax of httpd conf file
-#Output should say Syntax OK
+# Check the Syntax of httpd conf file
+# Output should say Syntax OK
 httpd -t
 
-#Restart & enable the httpd service
-systemctl restart httpd
-systemctl enable httpd
+# Restart & enable the httpd service
+systemctl restart httpd.service
+systemctl enable httpd.service
 
-#Optional, if selinux is enforced then, we need to provide the http context to the web content directory.
-#Check the default context of the web content directory
-
+# Optional, if SELinux is Enforced then, we need to provide the http Context to the Web Content Directory.
+# Check the default context of the web content directory
 ls -Z /var/www/website1_name/public_html
-output - unconfined_u:object_r:default_t:s0 /var/www/website1_name/public_html
+# Output - unconfined_u:object_r:default_t:s0 /var/www/website1_name/public_html
 
-#Apply the http context to the Web Content file
+# Apply the http context to the Web Content file
 semanage fcontext -a -t httpd_sys_content_t "/var/www/website1_name/public_html(/.*)?"
 semanage fcontext -a -t httpd_sys_content_t "/var/www/website2_name/public_html(/.*)?"
--a for adding new context rule
--t for defining context type
-httpd_sys_content_t for Apache's static content
+# -a for adding new context rule
+# -t for defining context type
+# httpd_sys_content_t for Apache's static content
 
-#Apply the http context to the sub directories as well
+# Apply the http context to the sub directories as well
 restorecon -R /var/www/website1_name/public_html
 restorecon -R /var/www/website2_name/public_html
--R means recursive, means it the permission will be applied to the child dir/files as well
+# -R means recursive, means it the permission will be applied to the child dir/files as well
 
-#Optional, if the firewall is active then allow http & https
-
+# Optional, if the firewall is active then allow http & https
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=https
 firewall-cmd --reload
 
-#Now access the browser & access the website
-
+# Now access the browser & access the website
 www.website1_name.com
 www.website2_name.com
 website1_name.com
 website2_name.com
 
-Logic to understand
+# Logic to understand
 
 1. Apache takes the web content from /var/www directory.
 2. A global configuration file is already present in the system but, custom conf file can be created in /etc/httpd/conf.d for virtual hosting.
