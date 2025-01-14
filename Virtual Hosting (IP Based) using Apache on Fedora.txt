@@ -117,7 +117,7 @@ httpd -t
 systemctl restart httpd.service
 systemctl enable httpd.service
 
-# Optional, if selinux is enforced then, we need to provide the http context to the web content directory.
+# Optional, if SELinux is Enforced then, we need to provide the http Context to the Web Content Directory.
 
 # Check the default context of the web content directory
 ls -Z /var/www/website1_name/public_html
