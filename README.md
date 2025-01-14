@@ -1,1 +1,1 @@
-This is just a reference for myself to understandint the concepts of linux systems
+This is just a reference for myself to understanding the concepts of linux systems
