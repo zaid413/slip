@@ -1,0 +1,347 @@
+
+Permissions Structure in Linux
+
+Linux permissions are divided into three components:
+
+Owner: The user who owns the file or directory.
+Group: A group of users who can access the file or directory.
+Others: All other users who are not the owner or in the group.
+
+Permissions are defined for each of these components in terms of:
+
+Read (r): View the file contents or list directory contents.
+Write (w): Modify the file contents or directory structure.
+Execute (x): Run the file as a program or enter the directory.
+
+The same permission can be expressed by numbers.
+
+Read (r) = 4
+Write (w) = 2
+Execute (e) = 1
+
+Example:
+-rwxr-xr-- 1 user group 1234 Jan 13 10:00 file.txt
+
+|-|rwx|r-x|r--|
+ ⬇  ⬇   ⬇   ↪➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡Others
+ ⬇  ⬇   ↪➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡➡Group
+ ⬇  ↪➡➡➡➡➡➡➡➡➡➡➡➡➡Owner
+ ↪➡➡➡➡➡➡➡File Type
+
+File Type: - (regular file), d (directory), etc.
+Owner Permissions: rwx (read, write, execute).	|4+2+1 = 7|
+Group Permissions: r-x (read, execute).		|4+1   = 5| = 754
+Others Permissions: r-- (read-only).		|4--   = 4|
+
+The owner can read, write & execute the file.
+The group users can only read & run the file but cannot write anything in the file.
+other users can only read the file but cannot open the file & write anything in the file.
+
+| 7 - rwx |
+| 6 - rw- |
+| 5 - r-x | The Permissions can be classified into
+| 4 - r-- | Symbolic Mode - rwx (Alphabetical)
+| 3 - -wx | Absolute Mode - 421 (Numerical)
+| 2 - -w- |
+| 1 - --x |
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Commands:
+
+chmod - change the permissions of a file/dir.
+
+Change permissions symbolically:
+chmod u+rwx file.txt      # Add read, write, execute for the owner
+chmod g-w file.txt        # Remove write for the group
+chmod o+x file.txt        # Add execute for others
+
+Change permissions numerically:
+chmod 755 file.txt        # rwxr-xr-x
+chmod 644 file.txt        # rw-r--r--
+chmod 700 file.txt        # rwx------
+
+Recursive modification:
+chmod -R 755 /directory   # Apply permissions to all files and subdirectories
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+chown - change the ownership of a file/dir
+
+Change the owner of the file/dir:
+chown username file.txt     # Change owner to 'username'
+chown username /directory   # Change owner to 'username'
+
+Change file owner and group of the file/dir:
+chown username:groupname file.txt
+chown username:groupname /directory
+
+Recursive modification:
+chown -R username /directory   # Change ownership for all files in a directory
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+chgrp - change the group ownership of the file/dir
+
+Change group ownership of the file/dir:
+chgrp groupname file.txt
+chgrp groupname /directory
+
+Recursive modification:
+chgrp -R groupname /directory
+
+===========================================================================================================================================================================
+
+Special Permissions
+
+Special permissions in Linux provide additional control over how files and directories behave.
+These permissions — Setuid, Setgid, and the Sticky Bit — are used for specific purposes, mainly enhancing security and functionality in multi-user environments.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1. Set User ID SUID (s):
+Allows a file to execute with the owner's privileges.
+Example:
+The passwd program needs to edit the system's password file (/etc/shadow), which only the root user can modify.
+A regular user don’t have direct permission to edit this file.
+The passwd program has the Setuid permission. When you run it, the program temporarily runs with the permissions of its owner (typically root), allowing it to edit the restricted file. It allows users to perform specific tasks requiring higher privileges without granting them root access.
+
+-rwsr-xr-x 1 root root 1234 /usr/bin/passwd
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. Set Group ID SGID (s):
+Allows files to run with the group's privileges of the file, regardless of the user running it. Any new files or subdirectories created inside will automatically belong to the same group as the directory.
+Example:
+A company has a shared directory for a team called Finance. The team works on sensitive files, and all members belong to the finance group. Any file added to this directory should automatically belong to the finance group, regardless of who created it.
+By setting SGID on the shared directory, all new files or subdirectories will inherit the finance group ownership, ensuring everyone in the group can access them based on group permissions.
+If a user named John (primary group john) creates a file in /shared/finance, the file will belong to the finance group, not john.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. Sticky Bit (t):
+Prevents non-owners from deleting files in a directory, mostly useful when sharing a file in
+Example:
+A university has a public directory (/shared) where students can save temporary project files. Since the directory is shared, all students have write access. Without restrictions, one student could accidentally or intentionally delete another student's files.
+By setting the Sticky Bit on the /shared directory, only the owner of a file (or the admin) can delete or rename it, even though everyone has write access.
+Students can add and modify their own files in /shared, but they cannot delete or rename other students’ files.
+
+The Special Permissions can be represented in numerical format too. They are seen ahead of the regular permissions, ex-4755,2741,1777.
+SUID (s) = 4
+SGID (s) = 2
+Sticky Bit (t) = 1
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Example SUID:
+-rwsr-xr-x
+rws (7 with SUID) for the owner: Read, write, execute, and SUID.
+r-x (5) for the group: Read and execute.
+r-x (5) for others: Read and execute.
+Regular permissions: 755 (owner: rwx = 7, group: r-x = 5, others: r-x = 5).
+Special permission: SUID adds 4 in the thousands place.
+Numerical Representation: 2755
+
+Example SGID:
+-rwxr-sr-x
+rwx (7) for the owner: Read, write, and execute.
+r-s (5 with SGID) for the group: Read and execute, with SGID.
+r-x (5) for others: Read and execute.
+Regular permissions: 755 (owner: rwx = 7, group: r-x = 5, others: r-x = 5).
+Special permission: SGID adds 2 in the thousands place.
+Numerical Representation: 2755
+
+Example Sticky Bit:
+drwxrwxrwt
+rwx (7) for the owner: Read, write, and execute.
+rwx (7) for the group: Read, write, and execute.
+rwt (7 with Sticky Bit set) for others: Read, write, execute, and Sticky Bit.
+Regular permissions: 777 (owner, group, others all have full permissions).
+Special permission: Sticky Bit adds 1 in the thousands place.
+Numerical Representation: 1777
+
+Setuid: Think of "U" (User). File runs with the owner’s power.
+Setgid: Think of "G" (Group). File or directory works with the group’s power.
+Sticky Bit: Think of "T" (Top priority for your files). Protects files in shared spaces.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Question 1:
+The symbol of special permission (s or t) is always placed on the execute (x) position, why?
+The special permission symbols (s and t) are placed in the execute (x) position because they are directly related to how a file is run or how a directory is accessed.
+
+Question 2:
+Sometimes the special permission is shown in uppercase or lowercase. Why?
+If a file or directory is executable and has special permissions, the x becomes s or t (lowercase).
+If the file or directory lacks executable permission but has special permissions, x is replaced by S or T (uppercase).
+
+Uppercase S: Only the special permission is applied; execute is not granted.
+Lowercase s: Both the special permission and execute are applied.
+Uppercase T: Only the Sticky Bit is applied; execute is not granted.
+Lowercase t: Both Sticky Bit and execute are applied.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Commands:
+
+Set SUID:
+chmod u+s file.txt       # Add SUID
+chmod 4755 file.txt      # Equivalent numeric mode
+
+Set SGID:
+chmod g+s /directory     # Add SGID to a directory
+chmod 2755 /directory    # Equivalent numeric mode
+
+Set Sticky Bit:
+chmod +t /directory      # Add Sticky Bit
+chmod 1755 /directory    # Equivalent numeric mode
+
+Remove special permissions:
+chmod u-s file.txt       # Remove SUID
+chmod g-s /directory     # Remove SGID
+chmod -t /directory      # Remove Sticky Bit
+chmod 0755 /directory	 # Remove SUID, SGUID & Sticky Bit all in numeric mode
+
+===========================================================================================================================================================================
+
+Umask
+
+umask (user file creation mode mask) is a Linux command and concept that determines the default permissions for new files and directories created by a user.
+When a file or directory is created, it starts with a default set of permissions, which are then modified by the umask value to restrict access.
+
+By default the Unix system creates file with permission 666 & directories with 777.
+Because of the security reasons, Files do not have execute (x) permission by default.
+The directories have complete permissions by default as it is required to allow access to their contents.
+
+The umask removes certain permissions from the default permissions to restrict access. It acts as a "subtraction rule" to remove permissions from the default.
+
+Default Permissions - Umask = Final Permissions
+
+Usually in most Linux distros the umask value is 022
+
+Example of a File:
+
+Default Permission: 666 | rw-rw-rw-
+Umask: 022 | ----w--w-
+Final Permission: 644 | rw-r--r--
+
+(rw-rw-rw-) - (----w--w-) = (rw-r--r--)
+    666		  022		644	
+
+Example of a directory:
+
+Default Permission: 777 | rwxrwxrwx
+Umask: 022 | ----w--w-
+Final Permission: 755 | rwxr-xr-x
+
+(rwxrwxrwx) - (----w--w-) = (rwxr-xr-x)
+    777		  022		755
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Commands
+umask : command to check the umask value
+umask 024 : to change the umask value
+
+===========================================================================================================================================================================
+
+Access Control List ACL
+
+ACL (Access Control List) is a feature in Linux that lets you set custom permissions for specific users or groups on files and directories.
+It provides more flexibility than the regular owner, group, others permissions.
+
+We can only set permissions for the owner, a single group, and others.
+What if we want to give John read-only access and Mary read-and-write access to the same file?
+Regular permissions can't do this, but ACL can!
+
+Commands:
+
+getfacl file			# View ACL permissions for a file or directory.
+setfacl -m u:user:rw		# Add/modify ACL for a user.
+setfacl -m g:group:w		# Add/modify ACL for a group.
+setfacl -x u:user		# Remove ACL for a user.
+setfacl -b file			# Remove all ACL permissions.
+setfacl -m d:u:user:rwx		# Set default ACL for a directory.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Check ACL Permissions
+
+getfacl myfile.txt
+
+# file: myfile.txt
+# owner: admin
+# group: devs
+user::rw-           # Owner permissions
+user:john:rw-       # Custom ACL for user 'john'
+group::r--          # Group permissions
+mask::rw-           # Maximum allowed permissions
+other::r--          # Others' permissions
+
+getfacl Command options
+
+Option	              Description			         Example
+  -a	Display only access ACLs (no default ACLs).	  getfacl -a myfile.txt
+  -d	Display only default ACLs (for directories).	  getfacl -d /shared_folder
+  -c	Suppress the comment headers in output.		  getfacl -c myfile.txt
+  -n	Show numeric user/group IDs instead of names.	  getfacl -n myfile.txt
+  -R	Recursively display ACLs for directories.	  getfacl -R /project
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Add ACL Permissions
+
+setfacl -m u:john:rw myfile.txt
+setfacl -m g:developers:r myfile.txt
+u - denotes user
+g - denotes group
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Remove ACL Permissions
+
+setfacl -x u:john myfile.txt
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Set Default ACL for Directories
+Default means read-and-write permission (6)
+
+setfacl -m d:u:john:rw /shared
+d - denotes default permission
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Remove all ACL Permissions
+
+setfacl -b myfile.txt
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+setfacl Command Options
+
+ Option	              Description			         			  Example
+   -m	     Modify or add an ACL entry.			  		 setfacl -m u:john:rw myfile.txt
+   -x	     Remove an ACL entry.				  		 setfacl -x u:john myfile.txt
+   -b	     Remove all ACL entries (reset to default permissions).		 setfacl -b myfile.txt
+   -k	     Remove the default ACL for a directory.				 setfacl -k /shared_folder
+   -R	     Apply ACL changes recursively to all files and subdirectories.	 setfacl -R -m u:john:rw /project
+   -d	     Set default ACL for a directory (applies to newly created files).	 setfacl -m d:u:john:rw /shared_folder
+--restore    Restore ACLs from a file generated by getfacl.			 setfacl --restore=acl_backup.txt
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Masks in ACL
+
+The mask defines the maximum permissions allowed for:
+Users (other than the owner).
+Groups.
+Default entries.
+
+For example:
+
+If a user john is given rwx, but the mask is set to rw-, john will only get rw- permissions.
+
+To modify the mask:
+
+setfacl -m m:rw file.txt
