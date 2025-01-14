@@ -103,7 +103,6 @@ vim /etc/httpd/conf.d/website2_name.conf
 # This ensures the browser reaches our local Apache server instead of searching the internet
 
 vim /etc/hosts
-
 192.168.1.8 www.website1_name.com
 192.168.1.6 www.website2_name.com
 192.168.1.8 website1_name.com
