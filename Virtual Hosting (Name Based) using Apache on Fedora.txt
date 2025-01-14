@@ -64,7 +64,7 @@ vim /var/www/website2_name/public_html/index.html
 
 # Configure virtual hosts for both the Websites
 
-# Virtual host for first Website
+# Virtual Host for first Website
 vim /etc/httpd/conf.d/website1_name.conf
 
 <VirtualHost *.80>
@@ -76,7 +76,7 @@ vim /etc/httpd/conf.d/website1_name.conf
 	CustomLog logs/www.website2_name.com-access_log common
 </VirtualHost>
 
-# Virtual host for second Website
+# Virtual Host for second Website
 vim /etc/httpd/conf.d/website2_name.conf
 
 <VirtualHost *.80>
@@ -98,7 +98,6 @@ vim /etc/httpd/conf.d/website2_name.conf
 # This ensures the browser reaches our local Apache server instead of searching the internet
 
 vim /etc/hosts
-
 127.0.0.1 www.website1_name.com
 127.0.0.1 www.website2_name.com
 127.0.0.1 website1_name.com
