@@ -34,7 +34,7 @@ systemctl start httpd.service
 systemctl enable httpd.service
 
 # Check the status of the httpd service
-#httpd.service should be enabled & should be active (running)
+# httpd.service should be enabled & should be active (running)
 systemctl status httpd.service
 
 # Check & note the IPs of the Adapters there can be multiple Network Adapters we are considering 2 for this scenario
