@@ -11,7 +11,7 @@ groupmod	# modify group settings
 gpasswd		# modify group password
 chage		# manage password aging policy, account expiration, force password change
 groups		# verify group
-id		# verify user
+id		    # verify user
 getent		# helps to get entries from important text files called databases
 
 ===========================================================================================================================================================================
