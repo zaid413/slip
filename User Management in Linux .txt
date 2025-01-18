@@ -1,0 +1,370 @@
+User Management Commands in Linux RHEL, Fedora, etc
+
+Commands
+
+useradd		# create user
+usermod		# modify user settings
+userdel		# user deletion
+passwd		# modify password of users
+groupadd	# create group		
+groupmod	# modify group settings
+gpasswd		# modify group password
+chage		# manage password aging policy, account expiration, force password change
+groups		# verify group
+id		# verify user
+getent		# helps to get entries from important text files called databases
+
+===========================================================================================================================================================================
+
+useradd
+# Basic syntax: useradd [options] username
+
+# Create a basic user
+useradd johnsmith
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Create user with all major options
+useradd \
+    -c "John Smith - DevOps Engineer" \  	# Add a comment/description to the user
+    -d /home/customhome/johnsmith \      	# Set custom home directory
+    -e 2025-12-31 \                      	# Define account expiry date
+    -f 7 \                               	# Days after password expires until account is disabled
+    -g developers \                      	# Primary group (can only be one)
+    -G docker,,admin \               		# Secondary groups (can be multiple)
+    -m \                                 	# Create home directory
+    -s /bin/bash \                       	# Default shell
+    -u 1500 \                            	# Set custom UID
+    -k /etc/custom_skel \                	# set custom skeleton directory
+    -D						# shows current default settings for the user
+    johnsmith
+
+Examples:
+
+# Add a comment/description to the user						# Set a custom home directory
+   useradd -c "John Smith - DevOps Engineer" johnsmith				   useradd -d /home/customhome/johnsmith johnsmith
+   
+# Define account expiry date							# Set days after password expiry until account is disabled
+   useradd -e 2025-12-31 johnsmith						   useradd -f 7 johnsmith
+
+# Assign a primary group							# Assign secondary groups
+   useradd -g developers johnsmith						   useradd -G docker,admin johnsmith
+
+# Create a home directory							# Set the default shell**
+   useradd -m johnsmith								   useradd -s /bin/bash johnsmith
+
+# Set a custom UID								# Use a custom skeleton directory
+   useradd -u 1500 johnsmith							   useradd -k /etc/custom_skel johnsmith
+
+# View current default settings
+   useradd -D
+
+# Assigning a custom home directory is useful for organizing home directories in non-standard locations, such as `/mnt/data/users`.
+   useradd -d /mnt/data/users/mark mark
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Create system account for service
+useradd \
+    -r \                                 # System account
+    -s /sbin/nologin \                   # No login shell
+    -c "MySQL Service Account" \         # Description
+    -d /var/lib/mysql \                  # Home directory
+    mysql
+
+Examples:
+
+# Create a system account				# Set no login shell
+   useradd -r mysql					   useradd -s /sbin/nologin mysql
+
+# Add a description					# Set a custom home directory
+   useradd -c "MySQL Service Account" mysql		   useradd -d /var/lib/mysql mysql
+
+# When creating accounts for services like MySQL, it’s important to disable login capabilities and specify a service-specific home directory.
+   useradd -r -s /sbin/nologin -d /var/lib/mysql -c "MySQL Service Account" mysql
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Create user with specific password expiry
+useradd \
+    -K PASS_MAX_DAYS=90 \                # Maximum password age
+    -K PASS_MIN_DAYS=7 \                 # Minimum password age
+    -K PASS_WARN_AGE=7 \                 # Warning days before expiry
+    johnsmith
+
+Examples:
+
+# Set maximum password age
+   useradd -K PASS_MAX_DAYS=90 johnsmith
+
+# Set minimum password age
+   useradd -K PASS_MIN_DAYS=7 johnsmith
+
+# Set warning days before password expiry
+   useradd -K PASS_WARN_AGE=7 johnsmith
+
+# Implementing strict password policies, such as requiring passwords to be updated every 90 days and warning users 7 days before expiry.
+   useradd -K PASS_MAX_DAYS=90 -K PASS_WARN_AGE=7 alice
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Check created user
+grep johnsmith /etc/passwd
+id johnsmith
+
+===========================================================================================================================================================================
+
+usermod
+# Basic syntax: usermod [options] username
+
+# Comprehensive user modification
+usermod \
+    -c "John Smith - Senior DevOps" \    # New comment
+    -d /newhome/johnsmith \              # New home directory
+    -m \                                 # Move contents
+    -e 2026-12-31 \                      # New expiry date
+    -f 14 \                              # New inactive period
+    -g seniordevs \                      # New primary group
+    -G docker,kubernetes,admin \         # New supplementary groups
+    -a \                                 # Append to groups
+    -l john.smith \                      # New username
+    -s /bin/zsh \                        # New shell
+    -u 1600 \                            # New UID
+    johnsmith
+
+# Lock/Unlock account
+usermod -L johnsmith               # Lock
+usermod -U johnsmith               # Unlock
+
+# Add to multiple groups without removing existing
+usermod -aG docker,,admin johnsmith
+
+# Change home directory without moving contents
+usermod -d /newhome/johnsmith johnsmith
+
+# Verify changes
+id john.smith
+groups john.smith
+
+===========================================================================================================================================================================
+
+passwd
+# Basic syntax: passwd [options] username
+
+# Set password with all options
+passwd \
+    -d \                # Delete password
+    -e \                # Expire password
+    -i 30 \             # Set inactive days
+    -l \                # Lock account
+    -n 7 \              # Minimum days
+    -x 90 \             # Maximum days
+    -w 7 \              # Warning days
+    -S \                # Status
+    johnsmith
+
+# Force password change at next login
+passwd -e johnsmith
+
+# Lock and unlock account
+passwd -l johnsmith               # Lock
+passwd -u johnsmith               # Unlock
+
+# Check password status
+passwd -S johnsmith
+
+# Set password with complexity rules
+echo "StrongP@ss123" |  passwd --stdin johnsmith
+
+===========================================================================================================================================================================
+
+groupadd
+# Basic syntax: groupadd [options] groupname
+
+# Create group with all options
+groupadd \
+    -f \                       # Force creation
+    -g 5000 \                  # Specific GID
+    -K GID_MIN=1000 \          # Minimum GID
+    -K GID_MAX=60000 \         # Maximum GID
+    -o \                       # Allow duplicate GID
+    -r \                       # System group
+    developers
+
+# Create system group
+groupadd -r mysql
+
+# Create group with next available GID
+groupadd project_team
+
+# Verify group creation
+grep developers /etc/group
+getent group developers
+
+===========================================================================================================================================================================
+
+groupmod
+# Basic syntax: groupmod [options] groupname
+
+# Modify group with all options
+groupmod \
+    -g 5001 \                         # New GID
+    -n senior_developers \            # New name
+    -o \                             # Allow duplicate GID
+    developers
+
+# Change group name only
+groupmod -n devs developers
+
+# Change GID only
+groupmod -g 6000 developers
+
+# Verify changes
+grep senior_developers /etc/group
+
+===========================================================================================================================================================================
+
+gpasswd
+# Basic syntax: gpasswd [options] group
+
+# Set group administrators
+gpasswd \
+    -A john.smith,sarah \             # Set administrators
+    -M john.smith,sarah,mike \        # Set members
+    developers
+
+# Add single user to group
+gpasswd -a robert developers
+
+# Remove user from group
+gpasswd -d mike developers
+
+# Remove group password
+gpasswd -r developers
+
+# Verify group membership
+getent group developers
+
+===========================================================================================================================================================================
+
+userdel - User Deletion
+# Basic syntax: userdel [options] username
+
+# Complete user removal
+userdel \
+    -f \                              # Force removal
+    -r \                              # Remove home directory
+    -Z \                             # Remove SELinux user mapping
+    johnsmith
+
+# Remove user but keep home directory
+userdel johnsmith
+
+# Force remove logged-in user
+userdel -f johnsmith
+
+# Verify deletion
+id johnsmith 2>&1 || echo "User deleted"
+
+===========================================================================================================================================================================
+
+chage - Password Aging
+# Basic syntax: chage [options] username
+
+# Set all aging parameters
+chage \
+    -d 0 \                            # Last password change
+    -E 2025-12-31 \                   # Account expiry
+    -I 30 \                           # Inactive days
+    -m 7 \                            # Minimum days
+    -M 90 \                           # Maximum days
+    -W 7 \                            # Warning days
+    johnsmith
+
+# Force immediate password change
+chage -d 0 johnsmith
+
+# Set account expiry
+chage -E $(date -d "+6 months" +%Y-%m-%d) contractor
+
+# View aging information
+chage -l johnsmith
+
+===========================================================================================================================================================================
+
+groups and id   000000000000000000000000000000000000000000000 check commands
+# Basic syntax: groups [options] username
+# Basic syntax: id [options] username
+
+# View all groups of a user
+groups johnsmith
+
+# View detailed ID information
+id johnsmith
+
+# View specific information
+id -u johnsmith                       # Only UID
+id -g johnsmith                       # Only primary GID
+id -G johnsmith                       # All group IDs
+id -n johnsmith                       # Names instead of IDs
+
+===========================================================================================================================================================================
+
+getent 000000000000000000000000000000000000000000000000 check syntax
+
+
+# Query user database
+getent passwd johnsmith
+
+# Query group database
+getent group developers
+
+# Query shadow database (root only)
+ getent shadow johnsmith
+
+===========================================================================================================================================================================
+
+## Real-world Scenarios
+
+### 1. Creating a New Developer Account
+
+# Create user with developer settings
+ useradd -m -c "Sarah Johnson - Developer" -G developers,docker -s /bin/bash sarah
+ passwd sarah
+ chage -d 0 sarah
+
+
+
+### 2. Setting Up Service Account
+```bash
+# Create service account for application
+ useradd -r -s /sbin/nologin -c "Web Application Service" webapp
+ usermod -L webapp
+```
+
+### 3. Temporary Contractor Setup
+```bash
+# Create contractor account with expiry
+ useradd -e $(date -d "+6 months" +%Y-%m-%d) -c "Temp Contractor" -G contractors contractor
+ passwd contractor
+ chage -W 14 -M 90 contractor
+```
+
+### 4. User Departure Process
+```bash
+# Archive user data and remove account
+ tar -czf /backup/johnsmith_home.tar.gz /home/johnsmith
+ usermod -L johnsmith
+ pkill -KILL -u johnsmith
+ userdel -r johnsmith
+```
+
+### 5. Group Management for Project
+```bash
+# Set up project group and members
+ groupadd -g 5000 project_alpha
+ gpasswd -A sarah project_alpha
+ usermod -aG project_alpha john.smith
+ chmod -R g+rwx /projects/alpha
+ chown -R :project_alpha /projects/alpha
+```
