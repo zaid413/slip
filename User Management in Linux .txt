@@ -1,0 +1,589 @@
+User Management in Linux - RHEL, Fedora, etc.
+
+User Management involves, creating, modifying, and deleting users and their associated settings.
+Below are some commands widely used for most User Management tasks.
+
+.-----------.--------------------------------------------------------------------------.
+| Commands  | Usage								       |
+:-----------:--------------------------------------------------------------------------:
+| useradd   | User Creation							       |
+| usermod   | Modify User Settings						       |
+| userdel   | User Deletion							       |
+| passwd    | Modify Password of Users                                                 |
+| groupadd  | Group Creation							       |
+| groupmod  | Modify Group Settings						       |
+| gpasswd   | Modify Group Password						       |
+| chage	    | Manage Password Aging Policy, Account Expiration, Force Password Change  |
+| groups    | Verify Group							       |
+| id	    | Verify User							       |
+| getent    | Helps to get entries from important text files called databases	       |
+'-----------'--------------------------------------------------------------------------'
+
+==================================================================================================================================================================
+
+useradd - User Creation
+
+# Create user with all major options
+.------------------.------------------------------------------------------------------------------------------------------------------------------------------.
+| useradd  	   | Basic syntax: useradd [options] username												      |
+:------------------:------------------------------------------------------------------------------------.-----------------------------------------------------:
+| Option 	   | Description                                              				| Example Command                             	      |
+:------------------:------------------------------------------------------------------------------------:-----------------------------------------------------:
+| (None)       	   | Simply create a User.			                   			| useradd johnsmith
+| -c       	   | Add a comment/description for the user.	                   			| useradd -c "John Smith - DevOps Engineer" johnsmith |
+| -d       	   | Specify a custom home directory for the user.                			| -d /home/customhome/johnsmith johnsmith             |
+| -e       	   | Set the account expiration date (YYYY-MM-DD).                			| -e 2025-12-31 johnsmith                             |
+| -f       	   | Set days after password expiration before the account is disabled. 		| -f 7 johnsmith                                      |
+| -g       	   | Assign a primary group for the user (single group).          			| -g developers johnsmith                             |
+| -G       	   | Assign one or more secondary groups to the user.             			| -G docker,admin johnsmith                           |
+| -m       	   | Automatically create the user’s home directory.              			| -m johnsmith                                        |
+| -s       	   | Specify the user’s default shell. User /sbin/nologin to prevent interactive login. | -s /bin/bash johnsmith                              |
+| -u       	   | Assign a custom User ID (UID) to the user.                   			| -u 1500 johnsmith                                   |
+| -k       	   | Specify a custom skeleton directory for initializing the user’s home directory. 	| -k /etc/custom_skel johnsmith                       |
+| -D       	   | Show current default settings for the useradd command.     			| -D         		                              |
+| -r               | Create a system account (UID < 1000 by default).                                	| -r MySQL                                            |
+| -K PASS_MAX_DAYS | Set the maximum number of days a password is valid before requiring a change.    	| -K PASS_MAX_DAYS=90 johnsmith                       |
+| -K PASS_MIN_DAYS | Set the minimum number of days before a password can be changed.                 	| -K PASS_MIN_DAYS=7 johnsmith                        |
+| -K PASS_WARN_AGE | Set the number of days before password expiration to warn the user.              	| -K PASS_WARN_AGE=7 johnsmith                        |
+:------------------'------------------------------------------------------------------------------------'-----------------------------------------------------:
+| johnsmith																		      |
+'-------------------------------------------------------------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Add a comment/description to the user						# Set a custom home directory
+   useradd -c "John Smith - DevOps Engineer" johnsmith				   useradd -d /home/customhome/johnsmith johnsmith
+   
+# Define account expiry date							# Set days after password expiry until account is disabled
+   useradd -e 2025-12-31 johnsmith						   useradd -f 7 johnsmith
+
+# Assign a primary group							# Assign secondary groups
+   useradd -g developers johnsmith						   useradd -G docker,admin johnsmith
+
+# Create a home directory							# Set the default shell**
+   useradd -m johnsmith								   useradd -s /bin/bash johnsmith
+
+# Set a custom UID								# Use a custom skeleton directory
+   useradd -u 1500 johnsmith							   useradd -k /etc/custom_skel johnsmith
+
+# View current default settings							# Create a system account
+   useradd -D									   useradd -r mysql
+
+# Set maximum password age							# Set minimum password age
+   useradd -K PASS_MAX_DAYS=90 johnsmith					   useradd -K PASS_MIN_DAYS=7 johnsmith
+
+# Set warning days before password expiry
+   useradd -K PASS_WARN_AGE=7 johnsmith
+
+# Implementing strict password policies, such as requiring passwords to be updated every 90 days and warning users 7 days before expiry.
+   useradd -K PASS_MAX_DAYS=90 -K PASS_WARN_AGE=7 alice
+
+# Assigning a custom home directory is useful for organizing home directories in non-standard locations, such as `/mnt/data/users`.
+   useradd -d /mnt/data/users/mark mark
+
+# When creating accounts for services like MySQL, it’s important to disable login capabilities and specify a service-specific home directory.
+   useradd -r -s /sbin/nologin -d /var/lib/mysql -c "MySQL Service Account" mysql
+
+# Check created user
+
+   grep johnsmith /etc/passwd
+   Output Example : johnsmith:x:1001:1001:John Smith:/home/johnsmith:/bin/bash
+
+   id johnsmith
+   Output Example : uid=1001(johnsmith) gid=1001(johnsmith) groups=1001(johnsmith),2000(docker),3000(admin)
+
+==================================================================================================================================================================
+
+usermod - User Modification & Management
+
+# Comprehensive user modification
+.------------------.--------------------------------------------------------------------------------------------------------------------------------.
+| usermod   | Basic syntax: usermod [options] username												    |
+:-----------:--------------------------------------------------------------------------------.------------------------------------------------------:
+| Option    | Description                                                                    | Example Command                                      |                                                                                   
+:-----------:--------------------------------------------------------------------------------:------------------------------------------------------:
+| -c        | Add or modify the user's comment/description                                   | usermod -c "John Smith - Senior DevOps" johnsmith    |                                             
+| -d        | Set a new home directory                                                       | usermod -d /newhome/johnsmith johnsmith              |
+| -m        | Move the contents of the old home directory to the new one                     | usermod -d /newhome/johnsmith -m johnsmith           | 
+| -e        | Set an account expiry date                                                     | usermod -e 2026-12-31 johnsmith                      | 
+| -f        | Set the number of days after password expiration until the account is disabled | usermod -f 14 johnsmith                              |
+| -g        | Change the primary group                                                       | usermod -g seniordevs johnsmith                      | 
+| -G        | Assign supplementary groups                                                    | usermod -G docker,kubernetes,admin johnsmith         | 
+| -a        | Append the user to supplementary groups (used with -G)                         | usermod -a -G admin johnsmith                        | 
+| -l        | Change the username                                                            | usermod -l john.smith johnsmith                      | 
+| -s        | Change the default shell                                                       | usermod -s /bin/zsh johnsmith                        | 
+| -u        | Change the User ID (UID)                                                       | usermod -u 1600 johnsmith                            | 
+| -L        | Locks the user account						  	     | usermod -L johnsmith                                 |
+| -U        | Unocks the user account							     | usermod -U johnsmith                                 |
+:-----------'--------------------------------------------------------------------------------'------------------------------------------------------:
+| johnsmith																	    |
+'---------------------------------------------------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Update the comment/description						# Change home directory (without moving contents)
+   usermod -c "John Smith - Senior DevOps" johnsmith				   usermod -d /newhome/johnsmith johnsmith
+
+# Change home directory and move contents					# Set new account expiry date
+   usermod -d /newhome/johnsmith -m johnsmith					   usermod -e 2026-12-31 johnsmith
+
+# Change inactive period after password expiration				# Change primary group
+   usermod -f 14 johnsmith							   usermod -g seniordevs johnsmith
+
+# Add new supplementary groups							# Append to supplementary groups without removing existing
+   usermod -G docker,kubernetes,admin johnsmith					   usermod -aG docker,kubernetes johnsmith
+
+# Rename the username								# Change the default shell
+   usermod -l john.smith johnsmith						   usermod -s /bin/zsh johnsmith
+
+# Change the user ID (UID)
+   usermod -u 1600 johnsmith
+
+# You need to update the details of `johnsmith` after his promotion to Senior DevOps Engineer:
+   usermod -c "John Smith - Senior DevOps" -g seniordevs -G docker,kubernetes,admin -s /bin/zsh johnsmith
+
+# To grant `johnsmith` access to `docker` and `admin` groups without losing existing group memberships:
+   usermod -aG docker,admin johnsmith
+
+# To migrate `johnsmith`'s home directory to a new location without moving files:
+   usermod -d /newhome/johnsmith johnsmith
+
+# Lock the account
+   usermod -L johnsmith
+   - Locks the user account by placing an exclamation mark (`!`) in front of the password hash in `/etc/shadow`.
+
+# Unlock the account
+   usermod -U johnsmith
+   - Removes the exclamation mark from the password hash, restoring access.
+
+# When an employee is temporarily unavailable (e.g., on extended leave), you can lock their account:
+   usermod -L johnsmith
+
+# Verify changes
+
+   id john.smith
+   Output Example : uid=1600(john.smith) gid=1001(seniordevs) groups=1001(seniordevs),1020(docker),1021(kubernetes),1022(admin)
+
+   groups john.smith
+   Output Example : john.smith : seniordevs docker kubernetes admin
+
+==================================================================================================================================================================
+
+passwd - Password Management
+
+# Set, view & manage password with all options
+.----------.----------------------------------------------------------------------------------------------.
+| passwd   | Basic syntax: passwd [options] username	   						  |
+:----------:-----------------------------------------------.----------------------------------------------:
+| Option   | Description		                   | Example Command				  |
+:----------:-----------------------------------------------:----------------------------------------------:
+| (None)   | Change the password of user                   | passwd johnsmith		       	          |
+| -d       | Deletes the password                          | passwd -d johnsmith	       	          |
+| -e       | Expires the password                          | passwd -e johnsmith       	          	  |
+| -i       | Sets inactive days after expiry               | passwd -i 30 johnsmith       	          |
+| -l       | Locks the account                             | passwd -l johnsmith	       	          |
+| -u       | Unlocks the account			   | passwd -u johnsmith			  |
+| -n       | Sets minimum password age                     | passwd -n 7 johnsmith	       	          |
+| -x       | Sets maximum password age                     | passwd -x 90 johnsmith       	          |
+| -w       | Sets warning days before password expiry      | passwd -w 7 johnsmith       	          |
+| -S       | Displays password status                      | passwd -S johnsmith	       	          |
+| --stdin  | Accepts password from standard input          | echo "password" | passwd --stdin johnsmith	  |
+:----------'-----------------------------------------------'----------------------------------------------:
+| johnsmith   												  |
+'---------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Change password
+   passwd johnsmith
+   - Set new password of the user account
+
+# Delete the password
+   passwd -d johnsmith
+   - Removes the password making the account accessible without a password
+
+# Expire the password
+   passwd -e johnsmith
+   - Forces user to change their password at the next login.
+
+# Set inactive days after password expiry
+   passwd -i 30 johnsmith
+   - Sets 30 days as the grace period after password expiry, after which the account is disabled.
+
+# Set minimum password age
+   passwd -n 7 johnsmith
+   - Specifies that a user must wait 7 days before changing their password again.
+
+# Set maximum password age
+   passwd -x 90 johnsmith
+   - Passwords for user must be changed every 90 days.
+
+# Set warning days before password expiry
+   passwd -w 7 johnsmith
+   - Sends a warning 7 days before the password for user expires.
+
+# Check password status
+   passwd -S johnsmith
+   - Displays the password status (e.g., locked, expired, inactive days, etc.).
+
+# Lock an account
+   passwd -l johnsmith
+   - Locks `johnsmith`'s account by placing an exclamation mark ('!') before the password hash in '/etc/shadow'.
+
+# Unlock an account
+   passwd -u johnsmith
+   - Unlocks `johnsmith`'s account by removing the exclamation mark ('!') before the password hash in '/etc/shadow'.
+
+# Check password status
+   passwd -S johnsmith
+   Output example : johnsmith LK 2023-01-01 0 90 7 -1 (Password locked.)
+
+# Set password with complexity rules
+
+# Set password directly (using `--stdin`):
+   echo "StrongP@ss123" | passwd --stdin johnsmith
+   - Sets `StrongP@ss123` as the password for `johnsmith` without requiring manual entry. Ensure strong password policies are enforced.
+
+==================================================================================================================================================================
+
+groupadd - Group Creation
+
+# Create group with all options
+.------------.-------------------------------------------------------------------------------------------.
+| groupadd   | Basic syntax: groupadd [options] groupname						 |
+:------------:------------------------------------------------------.------------------------------------:
+| Option     | Description                                          | Example Command                    |
+:------------:------------------------------------------------------:------------------------------------:
+| -f         | Force group creation without error if it exists      | groupadd -f developers             |
+| -g         | Set specific GID                                     | groupadd -g 5000 developers        |
+| -K GID_MIN | Set minimum allowable GID                            | groupadd -K GID_MIN=1000 devops    |
+| -K GID_MAX | Set maximum allowable GID                            | groupadd -K GID_MAX=60000 devops   |
+| -o         | Allow duplicate GID                                  | groupadd -o -g 5000 developers     |
+| -r         | Create a system group                                | groupadd -r mysql                  |
+:------------'------------------------------------------------------'------------------------------------:
+| developers												 |
+'--------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Force creation (no error if group already exists)					# Set specific GID
+   groupadd -f developers								   groupadd -g 5000 developers
+   - Suppresses errors if the `developers` group already exists.			   - Creates the `developers` group with a GID of 5000.
+
+# Set minimum GID									# Set maximum GID
+   groupadd -K GID_MIN=1000 developers							   groupadd -K GID_MAX=60000 developers
+   - Ensures the GID for the new group is not less than 1000.				   - Ensures the GID for the new group is not greater than 60000.
+
+# Allow duplicate GID									# Create a system group
+   groupadd -o -g 5000 developers							   groupadd -r developers
+   - Allows creating a group with a GID that already exists.				   - Creates the `developers` group as a system group (with GID < 1000 by default).
+
+# Create system group									# Create group with next available GID
+   groupadd -r mysql									   groupadd project_team
+   - Creates the `mysql` system group, typically used for services or system tasks.	   - Automatically assigns the next available GID to the `project_team` group.
+
+# Verify group creation
+
+   grep developers /etc/group
+   - Searches for the `developers` group entry in the `/etc/group` file.
+
+   getent group developers
+   - Displays the `developers` group information, including its GID and members, using the system database.
+
+==================================================================================================================================================================
+
+groupmod - Group Modification & Management
+
+# Modify group with all options
+.----------.---------------------------------------------------------------------.
+| groupmod | Basic syntax: groupmod [options] groupname	  		         |
+:----------:--------------------------------.------------------------------------:
+| Option   | Description                    | Example Command                    |
+:----------:--------------------------------:------------------------------------:
+| -g       | Change GID (Group ID)          | groupmod -g 5001 developers        |
+| -n       | Set specific GID               | groupmod -n senior_developers devs |
+| -o       | Set minimum allowable GID      | groupmod -o -g 5001 developers     |
+:----------'--------------------------------'------------------------------------:
+| developers						 			 |
+'--------------------------------------------------------------------------------'
+
+Examples:
+
+# Change group name only
+   groupmod -n devs developers
+   - Renames the developers group to devs.
+
+# Change GID only
+   groupmod -g 6000 developers
+   - Changes the GID of the developers group to 6000.
+
+# Allow Duplicate GID
+   groupmod -o -g 5001 developers
+   - Allows setting a GID for the developers group that is already in use by another group.
+
+# Verify changes
+   grep senior_developers /etc/group
+   - Verifies that the senior_developers group exists in the /etc/group file.
+
+==================================================================================================================================================================
+
+gpasswd - Group Password Management
+
+# Modify group password, admins, etc. with all options
+.------------.--------------------------------------------------------------------------------------.
+| gpasswd   | Basic syntax: gpasswd [options] group                                                |
+:------------:----------------------------------------.---------------------------------------------:
+|   Option   | Description                            | Example Command                             |
+:------------:----------------------------------------:---------------------------------------------:
+|     -A     | Assign administrators to the group     | gpasswd -A john.smith,sarah developers      |
+|     -M     | Set or replace group members           | gpasswd -M john.smith,sarah,mike developers |
+|     -a     | Add a single user to the group         | gpasswd -a robert developers		    |
+|     -d     | Remove a user from the group           | gpasswd -d mike developers                  |
+|     -g     | Set group password                     | gpasswd -g developers                       |
+|     -r     | Remove group password                  | gpasswd -r developers                       |
+:------------'----------------------------------------'---------------------------------------------:
+| developers                                                                                        |
+'---------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Add single user to group
+   gpasswd -a robert developers
+   - Adds 'robert' to 'developers' group.
+
+# Set Group Members
+   gpasswd -M john.smith,sarah,mike developers
+   - Replaces the current membership of the 'developers' group with 'john.smith', 'sarah', and 'mike'.
+
+# Assign administrator to group
+   gpasswd -A john.smith,sarah developers
+   - Assigns `john.smith` and `sarah` as administrators of the `developers` group. Administrators can add or remove members using `gpasswd`.
+
+# Remove user from group
+   gpasswd -d mike developers
+   - Removes 'mike' from the 'developers' group.
+
+# Set group password
+   gpasswd -g developers
+   - Set new a password for 'developers' group
+
+# Remove group password
+   gpasswd -r developers
+   - Removes the password from the `developers` group, disabling the use of `newgrp` to switch to the group.
+
+# Verify group membership
+   getent group developers
+   - Displays the `developers` group entry from the system's group database.
+
+==================================================================================================================================================================
+
+userdel - User Deletion
+
+# Complete user removal
+.----------.--------------------------------------------------------------------------------------------.
+|  userdel | userdel [options] username									|
+:----------:------------------------------------------------------------------.-------------------------:
+|  Option  | Description                                                      | Example Command         |
+:----------:------------------------------------------------------------------:-------------------------:
+|  (None)  | Deletes the user but keeps the home directory and mail spool     | userdel johnsmith       |
+|    -f    | Forcefully removes the user, even if they are logged in          | userdel -f johnsmith    |
+|    -r    | Removes the user's home directory and mail spool                 | userdel -r johnsmith    |
+|    -Z    | Removes the SELinux user mapping associated with the account     | userdel -Z johnsmith    |
+:----------'------------------------------------------------------------------'-------------------------:
+| johnsmith												|
+'-------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Remove user but keep home directory
+  userdel johnsmith
+  - Deletes the user but keeps the home directory & mail spool.
+
+# Remove user as well as the home directory
+   userdel -r johnsmith
+   - Deletes the user's home directory and mail spool along with the account.
+
+# Force remove logged-in user
+  userdel -f johnsmith
+   - Removes the user forcibly, even if the user is currently logged in.
+
+# Remove SELinux Mapping
+   userdel -Z johnsmith
+   - Removes the SELinux user mapping associated with the account.
+
+# Combine All Options
+   userdel -f -r -Z johnsmith
+   - Forcibly removes the user, deletes their home directory, and removes their SELinux mapping.
+
+# Verify deletion
+   id johnsmith 2>&1 || echo "User deleted"
+
+==================================================================================================================================================================
+
+chage - Password Aging
+
+# Set all aging parameters with options
+.-----------.-------------------------------------------------------------------------------------------------------------.
+| chage     | Basic syntax: chage [options] username								          |
+:-----------:---------------------------------------------------------------------------.---------------------------------:
+| Option    | Description                                                               | Example Command                 |
+:-----------:---------------------------------------------------------------------------:---------------------------------:
+| -d        | Sets the last password change date (0 for immediate password reset)       | chage -d 0 johnsmith            |
+| -E        | Sets the account expiry date                                              | chage -E 2025-12-31 johnsmith   |
+| -I        | Sets the number of inactive days after password expiry                    | chage -I 30 johnsmith           |
+| -m        | Sets the minimum days between password changes                            | chage -m 7 johnsmith            |
+| -M        | Sets the maximum days a password is valid                                 | chage -M 90 johnsmith           |
+| -W        | Sets the number of days before password expiry the user is warned         | chage -W 7 johnsmith            |
+| -l        | Lists password aging details                                              | chage -l johnsmith              |
+:-----------'---------------------------------------------------------------------------'---------------------------------:
+| johnsmith								       						  |
+'-------------------------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# Force immediate password change
+   chage -d 0 johnsmith
+   - Sets the last password change to today, forcing the user to change their password on the next login.
+
+# Set Account Expiry Date
+   chage -E 2025-12-31 johnsmith
+   - Specifies that the account will expire on December 31, 2025.
+
+# Set Inactive Days
+   chage -I 30 johnsmith
+   - After the password expires, the account will become inactive after 30 days.
+
+# Set Minimum Days Between Password Changes
+   chage -m 7 johnsmith
+   - Ensures users cannot change their passwords more than once in 7 days.
+
+# Set Maximum Days for Password Validity
+   chage -M 90 johnsmith
+   - Forces users to change their passwords every 90 days.
+
+# Set Warning Days Before Password Expiry
+   chage -W 7 johnsmith
+   - Warns the user 7 days before their password expires.
+
+# Combine All Aging Parameters
+   chage -d 0 -E 2025-12-31 -I 30 -m 7 -M 90 -W 7 johnsmith
+
+# Set account expiry
+   chage -E $(date -d "+6 months" +%Y-%m-%d) contractor
+   - Sets the account expiry for 6 months from today for a user named contractor.
+
+# View aging information
+   chage -l johnsmith
+   - Displays the password aging and expiry details for the user.
+
+==================================================================================================================================================================
+
+groups and id - View & Manage Users & Groups 
+
+# Validate users & group memberships with all options
+.------------.-------------------------------------------------------------------------------------------.
+| group / id | Basic syntax: id [options] username   /   Basic syntax: groups username			 |
+:------------:----------------------------------------------------------------------.--------------------:
+| Option     | Description                                                          | Example Command    |
+:------------:----------------------------------------------------------------------:--------------------:
+| groups     | Displays all groups a user belongs to                                | groups johnsmith   |
+| id         | Displays UID, primary GID, and all supplementary groups for a user   | id johnsmith       |
+| -u         | Outputs only the user's UID                                          | id -u johnsmith    |
+| -g         | Outputs only the primary GID                                         | id -g johnsmith    |
+| -G         | Outputs all group IDs (primary and supplementary)                    | id -G johnsmith    |
+| -n         | Outputs names instead of numerical IDs                               | id -n johnsmith    |
+| -un        | Outputs only the username                                            | id -un johnsmith   |
+| -gn        | Outputs only the primary group name                                  | id -gn johnsmith   |
+| -Gn        | Outputs all group names (primary and supplementary)                  | id -Gn johnsmith   |
+:------------'----------------------------------------------------------------------'--------------------:
+| johnsmith												 |
+'--------------------------------------------------------------------------------------------------------'
+
+Examples:
+
+# View all groups of a user
+   groups johnsmith
+
+# Check detailed information like, UID, GID & all supplementary groups of user
+   id johnsmith
+
+# View only UID of a user
+   id -u johnsmith
+   - Outputs only the user ID (UID) of johnsmith.
+
+# View only Primary GID of a user
+   id -g johnsmith
+   - Outputs the primary group ID (GID) of johnsmith.
+
+# All Group IDs of a user
+   id -G johnsmith
+   - Outputs all group IDs (primary and supplementary) that johnsmith belongs to.
+
+# Names Instead of IDs
+   id -n johnsmith
+   - Outputs the username, primary group name, and all supplementary group names instead of numerical IDs for johnsmith.
+
+# Only UID Name:
+   id -un johnsmith
+     
+# Only Primary GID Name:
+   id -gn johnsmith
+     
+# All Group Names:
+   id -Gn johnsmith
+
+==================================================================================================================================================================
+
+getent - Query databases like passwd, group, shadow, etc.
+
+.-----------.------------------------------------------------------------------------------------------------------------------.
+| getent    | Basic syntax: getent database [key]			 			   			       |
+:-----------:---------------------------------------------------------------.---------------------.----------------------------:
+| Database  | Description	                                            | Key    		  | Example Command            |
+:-----------:---------------------------------------------------------------:---------------------:----------------------------:
+| passwd    | Fetches user account details.		                    | username   	  | getent passwd johnsmith    |
+| group     | Fetches group account details.				    | groupname           | getent group developers    |
+| shadow    | Fetches password-related information (root only).	            | username    	  | getent shadow johnsmith    |
+| hosts     | Fetches hostname and IP mapping.                              | hostname 	          | getent hosts localhost     |
+| services  | Fetches network service information.                          | service name	  | getent services ssh        |
+| protocols | Fetches network protocol details.                             | protocol name       | getent protocols tcp       |
+| netgroup  | Fetches network groups.                                       | network groupname   | getent netgroup dev_group  |
+'-----------'---------------------------------------------------------------'---------------------'----------------------------'
+
+# Components of the Syntax
+
+# database:  
+   Specifies the name of the database to query. Common databases include: passwd, group, shadow, etc.
+
+# key: (Optional)  
+   Specifies the entry to query from the database.  
+   If provided, retrieves only the information for the specified key (e.g., a username, group name, or hostname).  
+   If omitted, retrieves the entire database.
+
+Examples:
+
+# Retrieve All Users:
+   getent passwd
+   - Fetches all entries from the user (passwd) database.
+
+# Retrieve Specific User:
+   getent passwd johnsmith
+   - Fetches details for the user johnsmith.
+
+# Retrieve All Groups:
+   getent group
+   - Fetches all entries from the group database.
+
+# Retrieve Specific Group:
+   getent group developers
+   - Fetches details for the developers group.
+
+# Retrieve All Shadow Entries:
+   getent shadow
+   - Fetches password-related information for all users (requires root user or sudo command).
+
+# Retrieve Specific Shadow Entry:
+   getent shadow johnsmith
+   - Fetches password-related information for johnsmith (requires root user or sudo command).
+
+==================================================================================================================================================================
